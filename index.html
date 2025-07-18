@@ -5,51 +5,45 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>RouteIQ - Data-Driven Route Optimization for Smarter Running</title>
 	<script src="https://cdn.tailwindcss.com"></script>
-	<script>
-		tailwind.config = {
-			theme: {
-				extend: {
-					colors: {
-						brand: {
-							red: '#B91C1C',
-							dark: '#374151'
-						}
-					}
-				}
-			}
-		}
-	</script>
+	<link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+	<!-- Font Awesome for icons -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+	<link rel="stylesheet" href="assets/css/styles.css">
+	<script src="assets/js/tailwind.config.js"></script>
+	<script src="assets/js/scripts.js"></script>
 </head>
 <body class="bg-white text-gray-900">
-	<!-- Navigation -->
+	<!-- Navigation Component -->
 	<nav class="bg-white shadow-sm border-b">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="flex justify-between items-center h-16">
 				<div class="flex items-center">
-					<div class="bg-brand-red text-white w-8 h-8 rounded-lg flex items-center justify-center mr-3">
-						<span class="font-bold text-lg">R</span>
-					</div>
-					<span class="text-xl font-bold text-brand-dark">RouteIQ</span>
+					<a href="index.html" class="flex items-center">
+						<img src="assets/images/logos/logo_routeiq.png" 
+							alt="RouteIQ Logo" 
+							class="h-8 w-auto mr-3"
+							loading="eager">
+						<span class="text-xl font-bold text-brand-dark"></span>
+					</a>
 				</div>
 				<div class="hidden md:flex items-center space-x-8">
-					<a href="#features" class="text-gray-600 hover:text-brand-red transition-colors">Features</a>
-					<a href="#analytics" class="text-gray-600 hover:text-brand-red transition-colors">Analytics</a>
-					<a href="#pricing" class="text-gray-600 hover:text-brand-red transition-colors">Pricing</a>
+					<a href="index.html#features" class="text-gray-600 hover:text-brand-red transition-colors">Features</a>
+					<a href="index.html#analytics" class="text-gray-600 hover:text-brand-red transition-colors">Analytics</a>
+					<a href="index.html#pricing" class="text-gray-600 hover:text-brand-red transition-colors">Pricing</a>
+					<a href="about.html" class="text-gray-600 hover:text-brand-red transition-colors">About</a>
 					<a href="https://www.instagram.com/route_iq" target="_blank" class="text-gray-600 hover:text-brand-red transition-colors">
-						<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-							<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-						</svg>
+    				<i class="fab fa-instagram text-lg"></i></a>
+					<a href="demo.html" class="bg-brand-red text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+						Try Demo
 					</a>
-					<button class="bg-brand-red text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
-						Book Demo
-					</button>
 				</div>
 			</div>
 		</div>
 	</nav>
 
 	<!-- Hero Section -->
-	<section class="bg-gradient-to-b from-gray-50 to-white py-20">
+	<section class="hero-section">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="grid lg:grid-cols-2 gap-12 items-center">
 				<div>
@@ -64,9 +58,9 @@
 						<button class="bg-brand-red text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-red-700 transition-colors">
 							Book Free Demo
 						</button>
-						<button class="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg text-lg font-semibold hover:border-brand-red hover:text-brand-red transition-colors">
+						<a href="demo.html"  class="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg text-lg font-semibold hover:border-brand-red hover:text-brand-red transition-colors">
 							Try Beta Version
-						</button>
+						</a>
 					</div>
 					<div class="flex items-center mt-8 space-x-6 text-sm text-gray-500">
 						<div class="flex items-center">
@@ -83,7 +77,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="bg-gray-100 rounded-xl p-8 h-96 flex items-center justify-center">
+				<div class="placeholder-demo">
 					<div class="text-center text-gray-500">
 						<div class="w-16 h-16 bg-gray-300 rounded-lg mx-auto mb-4"></div>
 						<p class="text-lg">Interactive Route Demo</p>
@@ -100,16 +94,16 @@
 			<div class="text-center mb-12">
 				<p class="text-gray-600 mb-8">Trusted by runners from</p>
 				<div class="grid grid-cols-2 md:grid-cols-4 gap-8 items-center opacity-60">
-					<div class="bg-gray-200 h-12 rounded flex items-center justify-center">
+					<div class="social-proof-item">
 						<span class="text-gray-500 font-semibold">Nike RC</span>
 					</div>
-					<div class="bg-gray-200 h-12 rounded flex items-center justify-center">
+					<div class="social-proof-item">
 						<span class="text-gray-500 font-semibold">Strava Club</span>
 					</div>
-					<div class="bg-gray-200 h-12 rounded flex items-center justify-center">
+					<div class="social-proof-item">
 						<span class="text-gray-500 font-semibold">Local Clubs</span>
 					</div>
-					<div class="bg-gray-200 h-12 rounded flex items-center justify-center">
+					<div class="social-proof-item">
 						<span class="text-gray-500 font-semibold">Universities</span>
 					</div>
 				</div>
@@ -118,39 +112,39 @@
 	</section>
 
 	<!-- Problem Statement -->
-	<section class="bg-gray-50 py-20">
-		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-			<h2 class="text-4xl font-bold text-brand-dark mb-8">
-				The Future of Route Optimization
-			</h2>
-			<p class="text-xl text-gray-600 mb-12 leading-relaxed">
-				Most running apps focus on tracking your past runs. RouteIQ uses comprehensive data analysis to optimize your future routes, combining OpenStreetMap terrain data with Strava community insights for intelligent recommendations.
-			</p>
-			<div class="grid md:grid-cols-3 gap-8">
-				<div class="text-center">
-					<div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-						<span class="text-green-600 text-2xl">📊</span>
-					</div>
-					<h3 class="text-lg font-semibold mb-2">OpenStreetMap Integration</h3>
-					<p class="text-gray-600">Comprehensive terrain and elevation data for accurate route difficulty assessment</p>
+<section class="problem-section">
+	<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+		<h2 class="text-4xl font-bold text-brand-dark mb-8">
+			The Future of Route Optimization
+		</h2>
+		<p class="text-xl text-gray-600 mb-12 leading-relaxed">
+			Most running apps focus on tracking your past runs. RouteIQ uses comprehensive data analysis to optimize your future routes, combining OpenStreetMap terrain data with Strava community insights for intelligent recommendations.
+		</p>
+		<div class="grid md:grid-cols-3 gap-8">
+			<div class="feature-card">
+				<div class="feature-icon">
+					<i class="fas fa-map text-green-600 text-2xl"></i>
 				</div>
-				<div class="text-center">
-					<div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-						<span class="text-green-600 text-2xl">🎯</span>
-					</div>
-					<h3 class="text-lg font-semibold mb-2">Strava API Analytics</h3>
-					<p class="text-gray-600">Leverage community running data to identify optimal routes and performance patterns</p>
+				<h3 class="text-lg font-semibold mb-2">OpenStreetMap Integration</h3>
+				<p class="text-gray-600">Comprehensive terrain and elevation data for accurate route difficulty assessment</p>
+			</div>
+			<div class="feature-card">
+				<div class="feature-icon">
+					<i class="fas fa-chart-line text-green-600 text-2xl"></i>
 				</div>
-				<div class="text-center">
-					<div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-						<span class="text-green-600 text-2xl">🚀</span>
-					</div>
-					<h3 class="text-lg font-semibold mb-2">Personalized Optimization</h3>
-					<p class="text-gray-600">Routes tailored to your specific fitness level, goals, and performance history</p>
+				<h3 class="text-lg font-semibold mb-2">Strava API Analytics</h3>
+				<p class="text-gray-600">Leverage community running data to identify optimal routes and performance patterns</p>
+			</div>
+			<div class="feature-card">
+				<div class="feature-icon">
+					<i class="fas fa-user-cog text-green-600 text-2xl"></i>
 				</div>
+				<h3 class="text-lg font-semibold mb-2">Personalized Optimization</h3>
+				<p class="text-gray-600">Routes tailored to your specific fitness level, goals, and performance history</p>
 			</div>
 		</div>
-	</section>
+	</div>
+</section>
 
 	<!-- Solution/Features -->
 	<section id="features" class="bg-white py-20">
@@ -168,8 +162,8 @@
 				<div>
 					<h3 class="text-3xl font-bold text-brand-dark mb-6">Smart Route Analysis</h3>
 					<div class="space-y-6">
-						<div class="flex items-start">
-							<div class="w-6 h-6 bg-brand-red rounded-full flex items-center justify-center mr-4 mt-1">
+						<div class="feature-item">
+							<div class="feature-checkmark">
 								<span class="text-white text-sm">✓</span>
 							</div>
 							<div>
@@ -177,8 +171,8 @@
 								<p class="text-gray-600">Routes rated based on your personal fitness level and past performance data</p>
 							</div>
 						</div>
-						<div class="flex items-start">
-							<div class="w-6 h-6 bg-brand-red rounded-full flex items-center justify-center mr-4 mt-1">
+						<div class="feature-item">
+							<div class="feature-checkmark">
 								<span class="text-white text-sm">✓</span>
 							</div>
 							<div>
@@ -186,8 +180,8 @@
 								<p class="text-gray-600">Recommendations adjust based on weather conditions and your performance in different climates</p>
 							</div>
 						</div>
-						<div class="flex items-start">
-							<div class="w-6 h-6 bg-brand-red rounded-full flex items-center justify-center mr-4 mt-1">
+						<div class="feature-item">
+							<div class="feature-checkmark">
 								<span class="text-white text-sm">✓</span>
 							</div>
 							<div>
@@ -197,7 +191,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="bg-gray-100 rounded-xl p-8 h-80 flex items-center justify-center">
+				<div class="placeholder-dashboard">
 					<div class="text-center text-gray-500">
 						<div class="w-16 h-16 bg-gray-300 rounded-lg mx-auto mb-4"></div>
 						<p class="text-lg">Route Analysis Dashboard</p>
@@ -207,7 +201,7 @@
 			</div>
 
 			<div class="grid lg:grid-cols-2 gap-16 items-center">
-				<div class="bg-gray-100 rounded-xl p-8 h-80 flex items-center justify-center lg:order-1">
+				<div class="placeholder-analytics lg:order-1">
 					<div class="text-center text-gray-500">
 						<div class="w-16 h-16 bg-gray-300 rounded-lg mx-auto mb-4"></div>
 						<p class="text-lg">Predictive Analytics</p>
@@ -217,8 +211,8 @@
 				<div class="lg:order-2">
 					<h3 class="text-3xl font-bold text-brand-dark mb-6">Predictive Performance Insights</h3>
 					<div class="space-y-6">
-						<div class="flex items-start">
-							<div class="w-6 h-6 bg-brand-red rounded-full flex items-center justify-center mr-4 mt-1">
+						<div class="feature-item">
+							<div class="feature-checkmark">
 								<span class="text-white text-sm">✓</span>
 							</div>
 							<div>
@@ -226,8 +220,8 @@
 								<p class="text-gray-600">Know your expected finish time before you start, based on route difficulty and your fitness level</p>
 							</div>
 						</div>
-						<div class="flex items-start">
-							<div class="w-6 h-6 bg-brand-red rounded-full flex items-center justify-center mr-4 mt-1">
+						<div class="feature-item">
+							<div class="feature-checkmark">
 								<span class="text-white text-sm">✓</span>
 							</div>
 							<div>
@@ -235,8 +229,8 @@
 								<p class="text-gray-600">Track how different route types impact your overall running improvement</p>
 							</div>
 						</div>
-						<div class="flex items-start">
-							<div class="w-6 h-6 bg-brand-red rounded-full flex items-center justify-center mr-4 mt-1">
+						<div class="feature-item">
+							<div class="feature-checkmark">
 								<span class="text-white text-sm">✓</span>
 							</div>
 							<div>
@@ -251,7 +245,7 @@
 	</section>
 
 	<!-- Analytics Dashboard Preview -->
-	<section id="analytics" class="bg-gray-50 py-20">
+	<section id="analytics" class="analytics-section">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="text-center mb-16">
 				<h2 class="text-4xl font-bold text-brand-dark mb-4">
@@ -263,7 +257,7 @@
 			</div>
 			
 			<div class="bg-white rounded-2xl shadow-xl p-8">
-				<div class="bg-gray-100 rounded-xl h-96 flex items-center justify-center">
+				<div class="placeholder-large">
 					<div class="text-center text-gray-500">
 						<div class="w-20 h-20 bg-gray-300 rounded-lg mx-auto mb-4"></div>
 						<p class="text-xl">Analytics Dashboard Mockup</p>
@@ -284,7 +278,7 @@
 			</div>
 			
 			<div class="grid md:grid-cols-3 gap-8">
-				<div class="bg-gray-50 rounded-xl p-6">
+				<div class="testimonial-card">
 					<div class="flex items-center mb-4">
 						<div class="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
 						<div>
@@ -296,7 +290,7 @@
 					<div class="text-yellow-500">★★★★★</div>
 				</div>
 				
-				<div class="bg-gray-50 rounded-xl p-6">
+				<div class="testimonial-card">
 					<div class="flex items-center mb-4">
 						<div class="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
 						<div>
@@ -308,7 +302,7 @@
 					<div class="text-yellow-500">★★★★★</div>
 				</div>
 				
-				<div class="bg-gray-50 rounded-xl p-6">
+				<div class="testimonial-card">
 					<div class="flex items-center mb-4">
 						<div class="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
 						<div>
@@ -324,7 +318,7 @@
 	</section>
 
 	<!-- Pricing -->
-	<section id="pricing" class="bg-gray-50 py-20">
+	<section id="pricing" class="pricing-section">
 		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="text-center mb-16">
 				<h2 class="text-4xl font-bold text-brand-dark mb-4">
@@ -333,30 +327,30 @@
 				<p class="text-xl text-gray-600 mb-4">
 					Start free, upgrade as you need more advanced analytics
 				</p>
-				<div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 max-w-2xl mx-auto">
+				<div class="beta-notice">
 					<p class="text-yellow-800 font-medium">🚧 Coming Soon - Currently in Beta Development</p>
 					<p class="text-yellow-700 text-sm mt-1">Pricing shown for planning purposes. Beta access currently free for early adopters.</p>
 				</div>
 			</div>
 			
 			<div class="grid md:grid-cols-2 gap-8">
-				<div class="bg-white rounded-xl p-8 shadow-lg">
+				<div class="pricing-card">
 					<h3 class="text-2xl font-bold mb-4">Free</h3>
 					<div class="text-4xl font-bold text-brand-red mb-6">€0<span class="text-lg text-gray-600">/month</span></div>
 					<ul class="space-y-3 mb-8">
-						<li class="flex items-center">
+						<li class="pricing-feature">
 							<span class="text-green-500 mr-3">✓</span>
 							Basic route creation
 						</li>
-						<li class="flex items-center">
+						<li class="pricing-feature">
 							<span class="text-green-500 mr-3">✓</span>
 							5 routes per month
 						</li>
-						<li class="flex items-center">
+						<li class="pricing-feature">
 							<span class="text-green-500 mr-3">✓</span>
 							Simple analytics
 						</li>
-						<li class="flex items-center">
+						<li class="pricing-feature">
 							<span class="text-green-500 mr-3">✓</span>
 							Mobile app access
 						</li>
@@ -366,34 +360,34 @@
 					</button>
 				</div>
 				
-				<div class="bg-brand-red text-white rounded-xl p-8 shadow-lg transform scale-105">
+				<div class="pricing-card-pro">
 					<div class="bg-white text-brand-red px-3 py-1 rounded-full text-sm font-semibold inline-block mb-4">
 						Most Popular
 					</div>
 					<h3 class="text-2xl font-bold mb-4">Pro</h3>
 					<div class="text-4xl font-bold mb-6">€19<span class="text-lg opacity-80">/month</span></div>
 					<ul class="space-y-3 mb-8">
-						<li class="flex items-center">
+						<li class="pricing-feature-pro">
 							<span class="text-green-300 mr-3">✓</span>
 							Unlimited routes
 						</li>
-						<li class="flex items-center">
+						<li class="pricing-feature-pro">
 							<span class="text-green-300 mr-3">✓</span>
 							Advanced analytics
 						</li>
-						<li class="flex items-center">
+						<li class="pricing-feature-pro">
 							<span class="text-green-300 mr-3">✓</span>
 							Performance predictions
 						</li>
-						<li class="flex items-center">
+						<li class="pricing-feature-pro">
 							<span class="text-green-300 mr-3">✓</span>
 							Weather integration
 						</li>
-						<li class="flex items-center">
+						<li class="pricing-feature-pro">
 							<span class="text-green-300 mr-3">✓</span>
 							Training plan integration
 						</li>
-						<li class="flex items-center">
+						<li class="pricing-feature-pro">
 							<span class="text-green-300 mr-3">✓</span>
 							Priority support
 						</li>
@@ -407,7 +401,7 @@
 	</section>
 
 	<!-- CTA Section -->
-	<section class="bg-brand-dark text-white py-20">
+	<section class="cta-section">
 		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 			<h2 class="text-4xl font-bold mb-6">
 				Ready to Run Smarter?
@@ -429,63 +423,56 @@
 		</div>
 	</section>
 
-	<!-- Footer -->
-	<footer class="bg-white border-t py-12">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="grid md:grid-cols-4 gap-8">
-				<div>
-					<div class="flex items-center mb-4">
-						<div class="bg-brand-red text-white w-8 h-8 rounded-lg flex items-center justify-center mr-3">
-							<span class="font-bold text-lg">R</span>
-						</div>
-						<span class="text-xl font-bold text-brand-dark">RouteIQ</span>
-					</div>
-					<p class="text-gray-600 mb-4">Data-driven route optimization for smarter running.</p>
-					<p class="text-sm text-gray-500">Founded February 2025 in The Hague, Netherlands</p>
-				</div>
-				<div>
-					<h4 class="font-semibold mb-4">Product</h4>
-					<ul class="space-y-2 text-gray-600">
-						<li><a href="#" class="hover:text-brand-red transition-colors">Features</a></li>
-						<li><a href="#" class="hover:text-brand-red transition-colors">Pricing</a></li>
-						<li><a href="#" class="hover:text-brand-red transition-colors">API</a></li>
-						<li><a href="#" class="hover:text-brand-red transition-colors">Mobile App</a></li>
-					</ul>
-				</div>
-				<div>
-					<h4 class="font-semibold mb-4">Company</h4>
-					<ul class="space-y-2 text-gray-600">
-						<li><a href="#" class="hover:text-brand-red transition-colors">About</a></li>
-						<li><a href="#" class="hover:text-brand-red transition-colors">Blog</a></li>
-						<li><a href="#" class="hover:text-brand-red transition-colors">Careers</a></li>
-						<li><a href="#" class="hover:text-brand-red transition-colors">Contact</a></li>
-					</ul>
-				</div>
-				<div>
-					<h4 class="font-semibold mb-4">Support</h4>
-					<ul class="space-y-2 text-gray-600">
-						<li><a href="#" class="hover:text-brand-red transition-colors">Help Center</a></li>
-						<li><a href="#" class="hover:text-brand-red transition-colors">Privacy Policy</a></li>
-						<li><a href="#" class="hover:text-brand-red transition-colors">Terms of Service</a></li>
-						<li><a href="#" class="hover:text-brand-red transition-colors">Status</a></li>
-					</ul>
-				</div>
+	<!-- Footer Component -->
+<footer class="bg-white border-t py-12">
+	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+		<div class="grid md:grid-cols-4 gap-8">
+			<div>
+				<a href="index.html" class="flex items-center mb-4">
+					<img src="assets/images/logos/logo_routeiq.png" 
+						 alt="RouteIQ Logo" 
+						 class="h-8 w-auto mr-3"
+						 loading="lazy">
+					<span class="text-xl font-bold text-brand-dark">RouteIQ</span>
+				</a>
+				<p class="text-gray-600 mb-4">Data-driven route optimization for smarter running.</p>
+				<p class="text-sm text-gray-500">Founded February 2025 in The Hague, Netherlands</p>
 			</div>
-			<div class="border-t mt-8 pt-8 text-center text-gray-600">
-				<p>&copy; 2025 RouteIQ. All rights reserved.</p>
+			<div>
+				<h4 class="font-semibold mb-4">Product</h4>
+				<ul class="space-y-2 text-gray-600">
+					<li><a href="index.html#features" class="hover:text-brand-red transition-colors">Features</a></li>
+					<li><a href="index.html#analytics" class="hover:text-brand-red transition-colors">Analytics</a></li>
+					<li><a href="index.html#pricing" class="hover:text-brand-red transition-colors">Pricing</a></li>
+					<li><a href="beta.html" class="hover:text-brand-red transition-colors">Try Beta</a></li>
+					<li><a href="#" class="hover:text-brand-red transition-colors">API</a></li>
+					<li><a href="#" class="hover:text-brand-red transition-colors">Mobile App</a></li>
+				</ul>
+			</div>
+			<div>
+				<h4 class="font-semibold mb-4">Company</h4>
+				<ul class="space-y-2 text-gray-600">
+					<li><a href="about.html" class="hover:text-brand-red transition-colors">About</a></li>
+					<li><a href="blog.html" class="hover:text-brand-red transition-colors">Blog</a></li>
+					<li><a href="careers.html" class="hover:text-brand-red transition-colors">Careers</a></li>
+					<li><a href="contact.html" class="hover:text-brand-red transition-colors">Contact</a></li>
+					<li><a href="demo.html" class="hover:text-brand-red transition-colors">Book Demo</a></li>
+				</ul>
+			</div>
+			<div>
+				<h4 class="font-semibold mb-4">Support</h4>
+				<ul class="space-y-2 text-gray-600">
+					<li><a href="#" class="hover:text-brand-red transition-colors">Help Center</a></li>
+					<li><a href="#" class="hover:text-brand-red transition-colors">Privacy Policy</a></li>
+					<li><a href="#" class="hover:text-brand-red transition-colors">Terms of Service</a></li>
+					<li><a href="#" class="hover:text-brand-red transition-colors">Status</a></li>
+				</ul>
 			</div>
 		</div>
-	</footer>
-
-	<script>
-		// Simple demo booking simulation
-		document.querySelectorAll('button').forEach(button => {
-			if (button.textContent.includes('Demo') || button.textContent.includes('Trial')) {
-				button.addEventListener('click', () => {
-					alert('Demo booking functionality would redirect to calendar scheduling system (Calendly integration)');
-				});
-			}
-		});
-	</script>
+		<div class="border-t mt-8 pt-8 text-center text-gray-600">
+			<p>&copy; 2025 RouteIQ. All rights reserved.</p>
+		</div>
+	</div>
+</footer>
 </body>
 </html>

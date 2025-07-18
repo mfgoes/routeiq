@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>RouteIQ Beta - Intelligent Route Optimization</title>
+	<meta name="description" content="Experience RouteIQ's intelligent route optimization in beta. Create data-driven running routes with real-time analytics.">
+	<link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="stylesheet" href="assets/css/styles.css">
+	<script src="assets/js/tailwind.config.js"></script>
+	<!-- Font Awesome for icons -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<!-- Leaflet for maps -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+	<!-- Navigation Component -->
+	<nav class="bg-white shadow-sm border-b">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="flex justify-between items-center h-16">
+				<div class="flex items-center">
+					<a href="index.html" class="flex items-center">
+						<img src="assets/images/logos/logo_routeiq.png" 
+							alt="RouteIQ Logo" 
+							class="h-8 w-auto mr-3"
+							loading="eager">
+						<span class="text-xl font-bold text-brand-dark"></span>
+					</a>
+				</div>
+				<div class="hidden md:flex items-center space-x-8">
+					<a href="index.html#features" class="text-gray-600 hover:text-brand-red transition-colors">Features</a>
+					<a href="index.html#analytics" class="text-gray-600 hover:text-brand-red transition-colors">Analytics</a>
+					<a href="index.html#pricing" class="text-gray-600 hover:text-brand-red transition-colors">Pricing</a>
+					<a href="about.html" class="text-gray-600 hover:text-brand-red transition-colors">About</a>
+					<a href="https://www.instagram.com/route_iq" target="_blank" class="text-gray-600 hover:text-brand-red transition-colors">
+						<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+							<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+						</svg>
+					</a>
+					<a href="demo.html" class="bg-brand-red text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+						Try Demo
+					</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Beta Header -->
+	<div class="bg-gradient-to-r from-brand-red to-red-600 text-white py-3">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+			<p class="text-sm">
+				<i class="fas fa-flask mr-2"></i>
+				<strong>Beta Version</strong> - This is a preview of RouteIQ's route optimization capabilities
+			</p>
+		</div>
+	</div>
+
+	<!-- Main App Interface -->
+	<div class="min-h-screen bg-gray-100">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+			<!-- App Header -->
+			<div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+				<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+					<div class="mb-4 lg:mb-0">
+						<h1 class="text-2xl font-bold text-brand-dark mb-2">Route Optimization Dashboard</h1>
+						<p class="text-gray-600">Create intelligent running routes based on your preferences and data analysis</p>
+					</div>
+					<div class="flex flex-col sm:flex-row gap-3">
+						<button class="bg-brand-red text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center">
+							<i class="fas fa-plus mr-2"></i>
+							New Route
+						</button>
+						<button class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:border-brand-red hover:text-brand-red transition-colors flex items-center">
+							<i class="fas fa-save mr-2"></i>
+							Save Route
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Main Content Grid -->
+			<div class="grid lg:grid-cols-4 gap-6">
+				<!-- Sidebar Controls -->
+				<div class="lg:col-span-1 space-y-6">
+					<!-- Route Parameters -->
+					<div class="bg-white rounded-lg shadow-sm p-6">
+						<h3 class="text-lg font-semibold text-brand-dark mb-4 flex items-center">
+							<i class="fas fa-sliders-h text-brand-red mr-2"></i>
+							Route Parameters
+						</h3>
+						<div class="space-y-4">
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Distance</label>
+								<select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-brand-red">
+									<option>5km</option>
+									<option>10km</option>
+									<option>15km</option>
+									<option>21km (Half Marathon)</option>
+								</select>
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Difficulty</label>
+								<select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-brand-red">
+									<option>Easy</option>
+									<option>Moderate</option>
+									<option>Challenging</option>
+									<option>Expert</option>
+								</select>
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Terrain Type</label>
+								<div class="space-y-2">
+									<label class="flex items-center">
+										<input type="checkbox" class="rounded border-gray-300 text-brand-red focus:ring-brand-red" checked>
+										<span class="ml-2 text-sm">Park paths</span>
+									</label>
+									<label class="flex items-center">
+										<input type="checkbox" class="rounded border-gray-300 text-brand-red focus:ring-brand-red">
+										<span class="ml-2 text-sm">Street running</span>
+									</label>
+									<label class="flex items-center">
+										<input type="checkbox" class="rounded border-gray-300 text-brand-red focus:ring-brand-red" checked>
+										<span class="ml-2 text-sm">Waterfront</span>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Route Stats -->
+					<div class="bg-white rounded-lg shadow-sm p-6">
+						<h3 class="text-lg font-semibold text-brand-dark mb-4 flex items-center">
+							<i class="fas fa-chart-bar text-brand-red mr-2"></i>
+							Route Analytics
+						</h3>
+						<div class="space-y-4">
+							<div class="flex justify-between items-center">
+								<span class="text-sm text-gray-600">Predicted Time</span>
+								<span class="font-semibold text-brand-dark">32:45</span>
+							</div>
+							<div class="flex justify-between items-center">
+								<span class="text-sm text-gray-600">Elevation Gain</span>
+								<span class="font-semibold text-brand-dark">124m</span>
+							</div>
+							<div class="flex justify-between items-center">
+								<span class="text-sm text-gray-600">Difficulty Score</span>
+								<span class="font-semibold text-green-600">7.2/10</span>
+							</div>
+							<div class="flex justify-between items-center">
+								<span class="text-sm text-gray-600">Surface Type</span>
+								<span class="font-semibold text-brand-dark">Mixed</span>
+							</div>
+							<div class="pt-2 border-t">
+								<div class="flex justify-between items-center mb-2">
+									<span class="text-sm text-gray-600">Route Quality</span>
+									<span class="text-sm font-medium text-green-600">Excellent</span>
+								</div>
+								<div class="w-full bg-gray-200 rounded-full h-2">
+									<div class="bg-green-500 h-2 rounded-full" style="width: 92%"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Weather Info -->
+					<div class="bg-white rounded-lg shadow-sm p-6">
+						<h3 class="text-lg font-semibold text-brand-dark mb-4 flex items-center">
+							<i class="fas fa-cloud-sun text-brand-red mr-2"></i>
+							Current Conditions
+						</h3>
+						<div class="space-y-3">
+							<div class="flex items-center justify-between">
+								<span class="text-sm text-gray-600">Temperature</span>
+								<span class="font-semibold">18°C</span>
+							</div>
+							<div class="flex items-center justify-between">
+								<span class="text-sm text-gray-600">Wind</span>
+								<span class="font-semibold">12 km/h</span>
+							</div>
+							<div class="flex items-center justify-between">
+								<span class="text-sm text-gray-600">Humidity</span>
+								<span class="font-semibold">65%</span>
+							</div>
+							<div class="bg-green-50 rounded-lg p-3 mt-4">
+								<p class="text-sm text-green-700 font-medium">Perfect running conditions!</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Map Area -->
+				<div class="lg:col-span-3">
+					<div class="bg-white rounded-lg shadow-sm overflow-hidden">
+						<div class="p-4 border-b border-gray-200">
+							<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+								<h3 class="text-lg font-semibold text-brand-dark mb-2 sm:mb-0">Optimized Route - The Hague City Center</h3>
+								<div class="flex items-center space-x-3">
+									<span class="text-sm text-gray-600">
+										<i class="fas fa-map-marker-alt text-brand-red mr-1"></i>
+										8.2km loop
+									</span>
+									<span class="text-sm text-gray-600">
+										<i class="fas fa-clock text-brand-red mr-1"></i>
+										32:45 est.
+									</span>
+								</div>
+							</div>
+						</div>
+						<div id="map" class="h-96 lg:h-[600px] w-full"></div>
+						
+						<!-- Map Controls -->
+						<div class="p-4 border-t border-gray-200 bg-gray-50">
+							<div class="flex flex-wrap items-center justify-between gap-3">
+								<div class="flex items-center space-x-4">
+									<button class="flex items-center px-3 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+										<i class="fas fa-location-crosshairs text-brand-red mr-2"></i>
+										<span class="text-sm">My Location</span>
+									</button>
+									<button class="flex items-center px-3 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+										<i class="fas fa-route text-brand-red mr-2"></i>
+										<span class="text-sm">Alternative Routes</span>
+									</button>
+								</div>
+								<div class="flex items-center space-x-2">
+									<span class="text-xs text-gray-500">Powered by OpenStreetMap + Strava data</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Route Segments -->
+					<div class="bg-white rounded-lg shadow-sm p-6 mt-6">
+						<h3 class="text-lg font-semibold text-brand-dark mb-4 flex items-center">
+							<i class="fas fa-list text-brand-red mr-2"></i>
+							Route Segments
+						</h3>
+						<div class="space-y-3">
+							<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+								<div class="flex items-center">
+									<div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">1</div>
+									<div>
+										<p class="font-medium text-brand-dark">Lange Voorhout Park</p>
+										<p class="text-sm text-gray-600">Flat park path, good for warm-up</p>
+									</div>
+								</div>
+								<div class="text-right">
+									<p class="text-sm font-semibold">1.2km</p>
+									<p class="text-xs text-gray-500">5:30 pace</p>
+								</div>
+							</div>
+							
+							<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+								<div class="flex items-center">
+									<div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">2</div>
+									<div>
+										<p class="font-medium text-brand-dark">City Center Loop</p>
+										<p class="text-sm text-gray-600">Mixed surfaces, moderate inclines</p>
+									</div>
+								</div>
+								<div class="text-right">
+									<p class="text-sm font-semibold">4.8km</p>
+									<p class="text-xs text-gray-500">4:45 pace</p>
+								</div>
+							</div>
+							
+							<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+								<div class="flex items-center">
+									<div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">3</div>
+									<div>
+										<p class="font-medium text-brand-dark">Scheveningen Beach Path</p>
+										<p class="text-sm text-gray-600">Waterfront, scenic finish</p>
+									</div>
+								</div>
+								<div class="text-right">
+									<p class="text-sm font-semibold">2.2km</p>
+									<p class="text-xs text-gray-500">5:15 pace</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Beta Feedback Bar -->
+	<div class="fixed bottom-0 left-0 right-0 bg-brand-red text-white p-4 shadow-lg">
+		<div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between">
+			<div class="flex items-center mb-2 sm:mb-0">
+				<i class="fas fa-info-circle mr-2"></i>
+				<span class="text-sm">This is a beta preview. Features are limited and data is simulated.</span>
+			</div>
+			<div class="flex space-x-3">
+				<button class="bg-white text-brand-red px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors">
+					Give Feedback
+				</button>
+				<button class="border border-white text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
+					Request Full Access
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// Initialize the map
+		const map = L.map('map').setView([52.0705, 4.3007], 13);
+
+		// Add OpenStreetMap tiles
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '© OpenStreetMap contributors'
+		}).addTo(map);
+
+		// Define route coordinates (The Hague area)
+		const routeCoordinates = [
+			[52.0805, 4.3107],  // Start: Lange Voorhout area
+			[52.0820, 4.3090],
+			[52.0835, 4.3070],
+			[52.0845, 4.3045],
+			[52.0850, 4.3020],
+			[52.0845, 4.2995],
+			[52.0825, 4.2980],
+			[52.0800, 4.2970],
+			[52.0775, 4.2975],
+			[52.0750, 4.2990],
+			[52.0730, 4.3010],
+			[52.0720, 4.3035],
+			[52.0725, 4.3060],
+			[52.0740, 4.3080],
+			[52.0760, 4.3095],
+			[52.0780, 4.3105],
+			[52.0805, 4.3107]   // End: Back to start
+		];
+
+		// Create the route polyline
+		const routeLine = L.polyline(routeCoordinates, {
+			color: '#B91C1C',
+			weight: 4,
+			opacity: 0.8
+		}).addTo(map);
+
+		// Add start marker
+		L.marker([52.0805, 4.3107], {
+			icon: L.divIcon({
+				html: '<div style="background-color: #10B981; border-radius: 50%; width: 20px; height: 20px; border: 2px solid white; display: flex; align-items: center; justify-content: center;"><i class="fas fa-play" style="color: white; font-size: 8px;"></i></div>',
+				className: 'custom-marker',
+				iconSize: [20, 20]
+			})
+		}).addTo(map).bindPopup('<b>Start Point</b><br>Lange Voorhout Park<br>Perfect warm-up location');
+
+		// Add waypoint markers
+		const waypoints = [
+			{lat: 52.0845, lng: 4.3045, label: 'Segment 1', description: 'Park Path - Easy terrain'},
+			{lat: 52.0800, lng: 4.2970, label: 'Segment 2', description: 'City Center - Mixed surfaces'},
+			{lat: 52.0740, lng: 4.3080, label: 'Segment 3', description: 'Waterfront - Scenic views'}
+		];
+
+		waypoints.forEach((point, index) => {
+			L.marker([point.lat, point.lng], {
+				icon: L.divIcon({
+					html: `<div style="background-color: #3B82F6; border-radius: 50%; width: 16px; height: 16px; border: 2px solid white; display: flex; align-items: center; justify-content: center; color: white; font-size: 8px; font-weight: bold;">${index + 1}</div>`,
+					className: 'custom-marker',
+					iconSize: [16, 16]
+				})
+			}).addTo(map).bindPopup(`<b>${point.label}</b><br>${point.description}`);
+		});
+
+		// Fit map to route bounds
+		map.fitBounds(routeLine.getBounds(), {padding: [20, 20]});
+
+		// Add some interactive features
+		routeLine.on('click', function(e) {
+			L.popup()
+				.setLatLng(e.latlng)
+				.setContent('<b>Optimized Route</b><br>8.2km loop<br>Estimated time: 32:45')
+				.openOn(map);
+		});
+
+		// Simulate real-time updates
+		let updateInterval = setInterval(() => {
+			// Simulate minor route adjustments (for demo purposes)
+			document.querySelector('[data-live-update]')?.classList.add('animate-pulse');
+			setTimeout(() => {
+				document.querySelector('[data-live-update]')?.classList.remove('animate-pulse');
+			}, 1000);
+		}, 10000);
+	</script>
+
+	<script src="assets/js/scripts.js"></script>
+</body>
+</html>

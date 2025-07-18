@@ -1,0 +1,218 @@
+/* Custom CSS for RouteIQ */
+
+/* Logo Styles */
+.logo-image {
+	height: 2rem;
+	width: auto;
+	max-width: none;
+	transition: transform 0.2s ease-in-out;
+}
+
+.logo-image:hover {
+	transform: scale(1.05);
+}
+
+/* Navigation specific logo sizing */
+nav .logo-image {
+	height: 2rem;
+}
+
+/* Footer specific logo sizing */
+footer .logo-image {
+	height: 2rem;
+}
+
+/* Responsive logo sizing */
+@media (max-width: 640px) {
+	.logo-image {
+		height: 1.75rem;
+	}
+}
+
+/* Hero Section */
+.hero-section {
+	background: linear-gradient(to bottom, #f9fafb, white);
+	padding: 5rem 0;
+}
+
+/* Problem Section */
+.problem-section {
+	background-color: #f9fafb;
+	padding: 5rem 0;
+}
+
+/* Analytics Section */
+.analytics-section {
+	background-color: #f9fafb;
+	padding: 5rem 0;
+}
+
+/* Pricing Section */
+.pricing-section {
+	background-color: #f9fafb;
+	padding: 5rem 0;
+}
+
+/* CTA Section */
+.cta-section {
+	background-color: #374151;
+	color: white;
+	padding: 5rem 0;
+}
+
+/* Component Styles */
+.social-proof-item {
+	background-color: #e5e7eb;
+	height: 3rem;
+	border-radius: 0.375rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.feature-card {
+	text-align: center;
+}
+
+.feature-icon {
+	width: 4rem;
+	height: 4rem;
+	background-color: #dcfce7;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto 1rem;
+}
+
+.feature-item {
+	display: flex;
+	align-items: flex-start;
+}
+
+.feature-checkmark {
+	width: 1.5rem;
+	height: 1.5rem;
+	background-color: #b91c1c;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: 1rem;
+	margin-top: 0.25rem;
+}
+
+.testimonial-card {
+	background-color: #f9fafb;
+	border-radius: 0.75rem;
+	padding: 1.5rem;
+}
+
+.pricing-card {
+	background-color: white;
+	border-radius: 0.75rem;
+	padding: 2rem;
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.pricing-card-pro {
+	background-color: #b91c1c;
+	color: white;
+	border-radius: 0.75rem;
+	padding: 2rem;
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+	transform: scale(1.05);
+}
+
+.pricing-feature {
+	display: flex;
+	align-items: center;
+}
+
+.pricing-feature-pro {
+	display: flex;
+	align-items: center;
+}
+
+.beta-notice {
+	background-color: #fef3c7;
+	border: 1px solid #fcd34d;
+	border-radius: 0.5rem;
+	padding: 1rem;
+	max-width: 32rem;
+	margin: 0 auto;
+}
+
+/* Placeholder Components */
+.placeholder-demo {
+	background-color: #f3f4f6;
+	border-radius: 0.75rem;
+	padding: 2rem;
+	height: 24rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.placeholder-dashboard {
+	background-color: #f3f4f6;
+	border-radius: 0.75rem;
+	padding: 2rem;
+	height: 20rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.placeholder-analytics {
+	background-color: #f3f4f6;
+	border-radius: 0.75rem;
+	padding: 2rem;
+	height: 20rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.placeholder-large {
+	background-color: #f3f4f6;
+	border-radius: 0.75rem;
+	height: 24rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+	.hero-section h1 {
+		font-size: 2.5rem;
+	}
+	
+	.pricing-card-pro {
+		transform: scale(1);
+	}
+}
+
+/* Utility Classes for Consistency */
+.section-padding {
+	padding: 5rem 0;
+}
+
+.container-max {
+	max-width: 80rem;
+	margin: 0 auto;
+	padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+	.container-max {
+		padding: 0 1.5rem;
+	}
+}
+
+@media (min-width: 1024px) {
+	.container-max {
+		padding: 0 2rem;
+	}
+}
