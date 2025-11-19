@@ -6,17 +6,28 @@ RouteIQ helps runners discover optimal routes using advanced data analysis from 
 
 ## Project Status
 
-🚧 **Phase 1 - MVP Development**
+🎉 **Phase 1 - Full-Stack MVP COMPLETE!**
 
-- [x] Project structure initialized
-- [x] Backend API setup (Express + Prisma)
-- [x] Database schema designed
-- [x] Authentication system (JWT)
-- [ ] Route generation & display
-- [ ] Activity tracking
-- [ ] Frontend dashboard
-- [ ] Workout logging (Phase 3)
-- [ ] Cross-training insights (Phase 4)
+**Backend ✅**
+- [x] Express API with 16 endpoints
+- [x] PostgreSQL database (11 models)
+- [x] JWT authentication
+- [x] Routes CRUD API
+- [x] Activities CRUD + statistics
+- [x] 22 exercises pre-seeded
+
+**Frontend ✅**
+- [x] Next.js 14 app with TypeScript
+- [x] Login/Register pages
+- [x] Dashboard with stats & graphs
+- [x] Activity logging form
+- [x] Activity history table
+- [x] Responsive design (mobile/tablet/desktop)
+
+**Next Steps:**
+- [ ] Map visualization (Leaflet.js) - Phase 1
+- [ ] Workout logging UI - Phase 3
+- [ ] Cross-training insights - Phase 4
 
 ## Tech Stack
 
@@ -157,28 +168,34 @@ routeiq/
 
 ## API Endpoints
 
-### Authentication
+### Authentication ✅
 - `POST /api/auth/register` - Create account
 - `POST /api/auth/login` - Login and get JWT
-- `GET /api/auth/me` - Get current user (requires auth)
-- `PUT /api/auth/me` - Update profile (requires auth)
+- `GET /api/auth/me` - Get current user
+- `PUT /api/auth/me` - Update profile
 
-### Routes (Coming soon)
-- `GET /api/routes` - List user's routes
+### Routes ✅
+- `GET /api/routes` - List user's routes (with filters)
 - `POST /api/routes` - Create new route
 - `GET /api/routes/:id` - Get route details
 - `PUT /api/routes/:id` - Update route
 - `DELETE /api/routes/:id` - Delete route
+- `GET /api/routes/public` - Browse public routes
 
-### Activities (Coming soon)
-- `GET /api/activities` - List activities
-- `POST /api/activities` - Log activity
-- `GET /api/activities/stats` - Get statistics
+### Activities ✅
+- `GET /api/activities` - List activities (with pagination)
+- `POST /api/activities` - Log a run
+- `GET /api/activities/:id` - Get activity details
+- `PUT /api/activities/:id` - Update activity
+- `DELETE /api/activities/:id` - Delete activity
+- `GET /api/activities/stats` - Get statistics (all-time, weekly, monthly, yearly)
 
 ### Workouts (Phase 3)
 - `GET /api/workouts` - List workouts
 - `POST /api/workouts` - Create workout
 - `GET /api/workouts/exercises` - List exercises
+
+**📖 See [API_EXAMPLES.md](backend/API_EXAMPLES.md) for complete API documentation with curl examples**
 
 ## Development
 

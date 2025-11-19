@@ -1,30 +1,26 @@
 import express from 'express';
-import { authenticate } from '../middleware/auth.js';
+import { authenticate, optionalAuth } from '../middleware/auth.js';
+import {
+  listRoutes,
+  createRoute,
+  getRoute,
+  updateRoute,
+  deleteRoute,
+  browsePublicRoutes,
+} from '../controllers/route.controller.js';
 
 const router = express.Router();
 
-// All route endpoints require authentication
+// Public routes
+router.get('/public', browsePublicRoutes);
+
+// Protected routes
 router.use(authenticate);
 
-// Placeholder routes (to be implemented)
-router.get('/', (req, res) => {
-  res.json({ message: 'List routes - TODO' });
-});
-
-router.post('/', (req, res) => {
-  res.json({ message: 'Create route - TODO' });
-});
-
-router.get('/:id', (req, res) => {
-  res.json({ message: `Get route ${req.params.id} - TODO` });
-});
-
-router.put('/:id', (req, res) => {
-  res.json({ message: `Update route ${req.params.id} - TODO` });
-});
-
-router.delete('/:id', (req, res) => {
-  res.json({ message: `Delete route ${req.params.id} - TODO` });
-});
+router.get('/', listRoutes);
+router.post('/', createRoute);
+router.get('/:id', getRoute);
+router.put('/:id', updateRoute);
+router.delete('/:id', deleteRoute);
 
 export default router;
