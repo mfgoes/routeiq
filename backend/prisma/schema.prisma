@@ -1,0 +1,358 @@
+// Prisma Schema for RouteIQ
+// Phase 1: Core tables (users, routes, activities)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// USER MANAGEMENT
+// ============================================================================
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  passwordHash String @map("password_hash")
+  firstName String?  @map("first_name")
+  lastName  String?  @map("last_name")
+  dateOfBirth DateTime? @map("date_of_birth") @db.Date
+  gender    String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  lastLoginAt DateTime? @map("last_login_at")
+
+  emailVerified Boolean @default(false) @map("email_verified")
+  subscriptionTier String @default("free") @map("subscription_tier")
+  subscriptionExpiresAt DateTime? @map("subscription_expires_at")
+  isActive  Boolean @default(true) @map("is_active")
+
+  // Relations
+  settings UserSettings?
+  routes   Route[]
+  activities Activity[]
+  workouts Workout[]
+  goals    Goal[]
+  personalRecords PersonalRecord[]
+  stravaConnection StravaConnection?
+
+  @@map("users")
+}
+
+model UserSettings {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+
+  // Units & Display
+  distanceUnit String @default("km") @map("distance_unit")
+  elevationUnit String @default("m") @map("elevation_unit")
+  weightUnit String @default("kg") @map("weight_unit")
+  temperatureUnit String @default("celsius") @map("temperature_unit")
+
+  // Running Preferences
+  fitnessLevel String @default("intermediate") @map("fitness_level")
+  primaryGoal String? @map("primary_goal")
+  weeklyMileageTarget Decimal? @map("weekly_mileage_target") @db.Decimal(5, 2)
+
+  // Privacy
+  profileVisibility String @default("private") @map("profile_visibility")
+  shareRoutesDefault Boolean @default(false) @map("share_routes_default")
+
+  // Notifications
+  emailNotifications Boolean @default(true) @map("email_notifications")
+  weeklySummary Boolean @default(true) @map("weekly_summary")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
+}
+
+model StravaConnection {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+
+  stravaAthleteId BigInt @unique @map("strava_athlete_id")
+  accessToken String @map("access_token")
+  refreshToken String @map("refresh_token")
+  tokenExpiresAt DateTime @map("token_expires_at")
+
+  scope     String?
+  connectedAt DateTime @default(now()) @map("connected_at")
+  lastSyncAt DateTime? @map("last_sync_at")
+
+  autoSync  Boolean @default(true) @map("auto_sync")
+  syncActivities Boolean @default(true) @map("sync_activities")
+  syncRoutes Boolean @default(false) @map("sync_routes")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("strava_connections")
+}
+
+// ============================================================================
+// RUNNING
+// ============================================================================
+
+model Route {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+
+  name      String
+  description String?
+  distance  Decimal  @db.Decimal(6, 2) // meters
+  elevationGain Decimal? @map("elevation_gain") @db.Decimal(6, 2)
+  elevationLoss Decimal? @map("elevation_loss") @db.Decimal(6, 2)
+
+  // Route Data (GeoJSON)
+  routeGeometry Json @map("route_geometry")
+  startPointLat Decimal? @map("start_point_lat") @db.Decimal(10, 7)
+  startPointLng Decimal? @map("start_point_lng") @db.Decimal(10, 7)
+  endPointLat Decimal? @map("end_point_lat") @db.Decimal(10, 7)
+  endPointLng Decimal? @map("end_point_lng") @db.Decimal(10, 7)
+
+  // Route Properties
+  routeType String @default("loop") @map("route_type")
+  surfaceTypes String[] @map("surface_types")
+  difficultyRating String? @map("difficulty_rating")
+  estimatedTime Int? @map("estimated_time") // seconds
+
+  // Metadata
+  isPublic  Boolean @default(false) @map("is_public")
+  isFavorite Boolean @default(false) @map("is_favorite")
+  timesCompleted Int @default(0) @map("times_completed")
+  source    String @default("generated")
+  stravaRouteId BigInt? @unique @map("strava_route_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activities Activity[]
+
+  @@index([userId])
+  @@index([isPublic])
+  @@index([userId, isFavorite])
+  @@map("routes")
+}
+
+model Activity {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  routeId   String?  @map("route_id")
+
+  name      String?
+  activityType String @default("run") @map("activity_type")
+  startedAt DateTime @map("started_at")
+
+  // Performance Metrics
+  distance  Decimal  @db.Decimal(6, 2) // meters
+  duration  Int      // seconds
+  movingTime Int?    @map("moving_time") // seconds
+  elevationGain Decimal? @map("elevation_gain") @db.Decimal(6, 2)
+  elevationLoss Decimal? @map("elevation_loss") @db.Decimal(6, 2)
+
+  // Pace & Speed
+  averagePace Decimal? @map("average_pace") @db.Decimal(5, 2)
+  averageSpeed Decimal? @map("average_speed") @db.Decimal(5, 2)
+  maxSpeed  Decimal? @map("max_speed") @db.Decimal(5, 2)
+
+  // Heart Rate
+  averageHeartRate Int? @map("average_heart_rate")
+  maxHeartRate Int? @map("max_heart_rate")
+
+  // Additional Data
+  calories  Int?
+  temperature Decimal? @db.Decimal(4, 1)
+  weatherConditions String? @map("weather_conditions")
+  perceivedEffort Int? @map("perceived_effort")
+
+  // Activity Data
+  gpsData   Json?    @map("gps_data")
+  splits    Json?
+
+  // Source & Sync
+  source    String @default("manual")
+  stravaActivityId BigInt? @unique @map("strava_activity_id")
+  externalId String? @map("external_id")
+
+  // Metadata
+  notes     String?
+  isRace    Boolean @default(false) @map("is_race")
+  isPrivate Boolean @default(false) @map("is_private")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  route Route? @relation(fields: [routeId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([userId, startedAt(sort: Desc)])
+  @@index([routeId])
+  @@index([activityType])
+  @@map("activities")
+}
+
+// ============================================================================
+// WORKOUT TRACKING (Phase 3)
+// ============================================================================
+
+model Exercise {
+  id        String   @id @default(uuid())
+
+  name      String
+  category  String
+  muscleGroups String[] @map("muscle_groups")
+  equipment String[]
+
+  isCompound Boolean @default(false) @map("is_compound")
+  difficultyLevel String? @map("difficulty_level")
+
+  description String?
+  instructions String?
+  videoUrl  String?  @map("video_url")
+
+  isCustom  Boolean @default(false) @map("is_custom")
+  createdByUserId String? @map("created_by_user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  workoutExercises WorkoutExercise[]
+
+  @@index([category])
+  @@map("exercises")
+}
+
+model Workout {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+
+  name      String?
+  workoutType String? @map("workout_type")
+  startedAt DateTime @map("started_at")
+  completedAt DateTime? @map("completed_at")
+
+  totalDuration Int? @map("total_duration") // seconds
+  totalVolume Decimal? @map("total_volume") @db.Decimal(10, 2)
+  totalReps Int? @map("total_reps")
+
+  perceivedEffort Int? @map("perceived_effort")
+  energyLevel Int? @map("energy_level")
+
+  notes     String?
+  location  String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercises WorkoutExercise[]
+
+  @@index([userId])
+  @@index([userId, startedAt(sort: Desc)])
+  @@map("workouts")
+}
+
+model WorkoutExercise {
+  id        String   @id @default(uuid())
+  workoutId String   @map("workout_id")
+  exerciseId String  @map("exercise_id")
+
+  exerciseOrder Int   @map("exercise_order")
+  sets      Json     // [{"set": 1, "reps": 10, "weight": 60, "rest": 90, "rpe": 7}]
+
+  totalSets Int?     @map("total_sets")
+  totalReps Int?     @map("total_reps")
+  totalVolume Decimal? @map("total_volume") @db.Decimal(10, 2)
+  maxWeight Decimal? @map("max_weight") @db.Decimal(6, 2)
+
+  notes     String?
+  isPersonalRecord Boolean @default(false) @map("is_personal_record")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  workout Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+
+  @@index([workoutId])
+  @@index([exerciseId])
+  @@index([workoutId, exerciseOrder])
+  @@map("workout_exercises")
+}
+
+// ============================================================================
+// GOALS & TRACKING
+// ============================================================================
+
+model Goal {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+
+  goalType  String   @map("goal_type")
+  title     String
+  description String?
+
+  targetDate DateTime? @map("target_date") @db.Date
+  targetDistance Decimal? @map("target_distance") @db.Decimal(6, 2)
+  targetTime Int?     @map("target_time")
+  targetWeight Decimal? @map("target_weight") @db.Decimal(6, 2)
+
+  status    String @default("active")
+  progressPercentage Decimal @default(0) @map("progress_percentage") @db.Decimal(5, 2)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  completedAt DateTime? @map("completed_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, status])
+  @@map("goals")
+}
+
+model PersonalRecord {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+
+  recordType String  @map("record_type")
+
+  // Running PRs
+  distance  Decimal? @db.Decimal(6, 2)
+  duration  Int?
+  activityId String? @map("activity_id")
+
+  // Exercise PRs
+  exerciseId String? @map("exercise_id")
+  weight    Decimal? @db.Decimal(6, 2)
+  reps      Int?
+  workoutExerciseId String? @map("workout_exercise_id")
+
+  achievedAt DateTime @map("achieved_at")
+  previousRecordId String? @map("previous_record_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, recordType])
+  @@map("personal_records")
+}
