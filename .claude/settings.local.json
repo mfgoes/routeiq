@@ -7,7 +7,19 @@
       "Bash(npm:*)",
       "Bash(node --version:*)",
       "Bash(cat:*)",
-      "Bash(docker compose:*)"
+      "Bash(docker compose:*)",
+      "Bash(chmod:*)",
+      "Bash(psql:*)",
+      "Bash(brew install:*)",
+      "Bash(brew services start:*)",
+      "Bash(createdb:*)",
+      "Bash(pnpm prisma migrate:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm approve-builds:*)",
+      "Bash(pnpm prisma generate:*)",
+      "Bash(pnpm prisma db seed:*)",
+      "Bash(pnpm dev)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []

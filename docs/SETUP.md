@@ -20,7 +20,7 @@
 - **Forms:** React Hook Form + Zod
 
 ### DevOps
-- **Development:** Docker Compose (PostgreSQL + Redis)
+- **Development:** Local PostgreSQL (PostgreSQL 14+)
 - **Hosting:** Vercel (frontend) + Railway (backend)
 - **CI/CD:** GitHub Actions
 - **Monitoring:** Sentry (errors) + Plausible (analytics)
@@ -44,9 +44,10 @@ routeiq/
 │   │   ├── migrations/       # SQL migrations
 │   │   └── seed.js           # Seed data
 │   ├── tests/
+│   ├── scripts/
+│   │   └── init-local-db.sh  # Database setup helper
 │   ├── .env.example
-│   ├── package.json
-│   └── Dockerfile
+│   └── package.json
 │
 ├── frontend/
 │   ├── src/
@@ -76,7 +77,6 @@ routeiq/
 │   ├── about.html
 │   └── assets/
 │
-├── docker-compose.yml         # Local development
 ├── .gitignore
 └── README.md
 ```
@@ -90,8 +90,17 @@ routeiq/
 # Install Node.js 18+
 node --version  # Should be v18+
 
-# Install PostgreSQL 14+ OR use Docker
-postgres --version
+# Install PostgreSQL 14+
+# macOS:
+brew install postgresql@14
+brew services start postgresql@14
+
+# Ubuntu/Debian:
+sudo apt-get install postgresql-14
+sudo systemctl start postgresql
+
+# Windows (with Chocolatey):
+choco install postgresql14
 
 # Install pnpm (faster than npm)
 npm install -g pnpm
@@ -99,14 +108,15 @@ npm install -g pnpm
 
 ### Quick Start
 ```bash
-# 1. Start PostgreSQL (using Docker)
-docker-compose up -d
+# 1. Create local database
+cd backend
+./scripts/init-local-db.sh
+# Or manually: createdb routeiq_dev
 
 # 2. Setup backend
-cd backend
 pnpm install
 cp .env.example .env
-# Edit .env with your database credentials
+# .env already configured for localhost
 pnpm prisma migrate dev
 pnpm prisma db seed
 pnpm dev  # Starts on http://localhost:3001
@@ -369,13 +379,24 @@ pnpm format:check
 ### "Cannot connect to database"
 ```bash
 # Check if PostgreSQL is running
-docker-compose ps
+pg_isready
 
-# Restart containers
-docker-compose restart
+# Check PostgreSQL service status
+# macOS:
+brew services list | grep postgresql
 
-# Check logs
-docker-compose logs postgres
+# Ubuntu/Debian:
+sudo systemctl status postgresql
+
+# Restart PostgreSQL
+# macOS:
+brew services restart postgresql@14
+
+# Ubuntu/Debian:
+sudo systemctl restart postgresql
+
+# Check database exists
+psql -l | grep routeiq
 ```
 
 ### "Prisma client not generated"

@@ -43,9 +43,9 @@ RouteIQ helps runners discover optimal routes using advanced data analysis from 
 - Leaflet.js for maps
 
 **DevOps:**
-- Docker Compose (local development)
+- Local PostgreSQL (local development)
 - Vercel (frontend hosting)
-- Railway (backend hosting)
+- Railway (backend + database hosting)
 
 ## Quick Start
 
@@ -54,7 +54,14 @@ RouteIQ helps runners discover optimal routes using advanced data analysis from 
 ```bash
 # Required
 node --version  # v18 or higher
-docker --version  # For PostgreSQL
+
+# Install PostgreSQL 14+
+# macOS:
+brew install postgresql@14 && brew services start postgresql@14
+# Ubuntu/Debian:
+sudo apt-get install postgresql-14 && sudo systemctl start postgresql
+# Windows:
+choco install postgresql14
 
 # Install pnpm (recommended)
 npm install -g pnpm
@@ -74,14 +81,15 @@ pnpm install
 cp .env.example .env
 ```
 
-2. **Start PostgreSQL**
+2. **Create database**
 
 ```bash
-# From project root
-docker-compose up -d
+# Use helper script
+cd backend
+./scripts/init-local-db.sh
 
-# Check it's running
-docker-compose ps
+# OR create manually:
+createdb routeiq_dev
 ```
 
 3. **Initialize database**
@@ -150,6 +158,8 @@ routeiq/
 │   ├── prisma/
 │   │   ├── schema.prisma # Database schema
 │   │   └── seed.js       # Seed data
+│   ├── scripts/
+│   │   └── init-local-db.sh # Database setup helper
 │   └── package.json
 │
 ├── frontend/             # Next.js app (coming soon)
@@ -160,10 +170,8 @@ routeiq/
 │   ├── CLAUDE.md         # Project strategy
 │   └── SETUP.md          # Detailed setup guide
 │
-├── static-landing/       # Static marketing site
-│   └── index.html
-│
-└── docker-compose.yml    # PostgreSQL setup
+└── static-landing/       # Static marketing site
+    └── index.html
 ```
 
 ## API Endpoints
