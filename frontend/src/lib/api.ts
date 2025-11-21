@@ -95,4 +95,31 @@ export const activitiesAPI = {
     api.get('/activities/stats', { params }),
 };
 
+// Workouts API
+export const workoutsAPI = {
+  // Get all exercises
+  getExercises: (params?: any) =>
+    api.get('/workouts/exercises', { params }),
+
+  // List workouts
+  list: (params?: any) =>
+    api.get('/workouts', { params }),
+
+  // Create workout
+  create: (data: any) =>
+    api.post('/workouts', data),
+
+  // Get single workout
+  get: (id: string) =>
+    api.get(`/workouts/${id}`),
+
+  // Update workout
+  update: (id: string, data: any) =>
+    api.put(`/workouts/${id}`, data),
+
+  // Delete workout
+  delete: (id: string) =>
+    api.delete(`/workouts/${id}`),
+};
+
 export default api;
