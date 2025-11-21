@@ -1,16 +1,26 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import { activitiesAPI } from '@/lib/api';
+import { activitiesAPI, routesAPI } from '@/lib/api';
+
+interface Route {
+  id: string;
+  name: string;
+  distance: number;
+}
 
 export default function NewActivityPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [routes, setRoutes] = useState<Route[]>([]);
+  const [loadingRoutes, setLoadingRoutes] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
+    routeId: searchParams.get('routeId') || '',
     activityType: 'run',
     startedAt: new Date().toISOString().slice(0, 16),
     distance: '',
@@ -23,6 +33,21 @@ export default function NewActivityPage() {
     notes: '',
     isRace: false,
   });
+
+  useEffect(() => {
+    fetchRoutes();
+  }, []);
+
+  const fetchRoutes = async () => {
+    try {
+      const response = await routesAPI.list();
+      setRoutes(response.data.routes || []);
+    } catch (err) {
+      console.error('Error fetching routes:', err);
+    } finally {
+      setLoadingRoutes(false);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const value = e.target.type === 'checkbox' ? (e.target as HTMLInputElement).checked : e.target.value;
@@ -44,6 +69,7 @@ export default function NewActivityPage() {
 
       const payload = {
         name: formData.name || undefined,
+        routeId: formData.routeId || undefined,
         activityType: formData.activityType,
         startedAt: new Date(formData.startedAt).toISOString(),
         distance,
@@ -91,6 +117,27 @@ export default function NewActivityPage() {
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red sm:text-sm px-3 py-2 border"
               placeholder="Morning Run"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Route (optional)</label>
+            <select
+              name="routeId"
+              value={formData.routeId}
+              onChange={handleChange}
+              disabled={loadingRoutes}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red sm:text-sm px-3 py-2 border"
+            >
+              <option value="">No route selected</option>
+              {routes.map(route => (
+                <option key={route.id} value={route.id}>
+                  {route.name} ({(route.distance / 1000).toFixed(1)} km)
+                </option>
+              ))}
+            </select>
+            {loadingRoutes && (
+              <p className="mt-1 text-sm text-gray-500">Loading routes...</p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">

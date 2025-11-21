@@ -19,7 +19,8 @@
       "Bash(pnpm prisma generate:*)",
       "Bash(pnpm prisma db seed:*)",
       "Bash(pnpm dev)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []

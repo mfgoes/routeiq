@@ -1,109 +1,97 @@
-# Getting Started with RouteIQ Development
+# 🚀 RouteIQ - Getting Started
 
-## ✅ What's Been Set Up
+**Get RouteIQ running locally in under 10 minutes.**
 
-The project structure is now ready with:
+## Prerequisites
 
-- ✅ Backend API (Express + Prisma + PostgreSQL)
-- ✅ Authentication system (JWT-based register/login)
-- ✅ Database schema (Prisma) with all tables designed
-- ✅ Seed data (22 exercises for gym tracking)
-- ✅ Docker Compose for PostgreSQL
-- ✅ Error handling & middleware
-- ✅ Project documentation
+✅ **Node.js 18+** - [Download](https://nodejs.org/)
+✅ **Docker Desktop** - [Download](https://www.docker.com/products/docker-desktop/)
+✅ **pnpm** (recommended) - `npm install -g pnpm`
 
-## 🚀 Next Steps to Get Running
+## What's Been Built
 
-### 1. Install Prerequisites
+**Backend (100% Complete):**
+- ✅ Express API with 16 endpoints
+- ✅ PostgreSQL database + Prisma ORM
+- ✅ JWT authentication system
+- ✅ Routes, Activities, Stats APIs
+- ✅ 22 exercises pre-seeded
+
+**Frontend (~40% Complete):**
+- ✅ Next.js 14 with TypeScript
+- ✅ Login/Register pages
+- ✅ Dashboard with stat cards
+- ✅ Activity logging and history
+- ✅ Routes list page
+- 🚧 Route creation UI (needs map integration)
+- 🚧 Charts/visualizations
+
+## Quick Start (5 Minutes)
+
+### Step 1: Clone & Install
 
 ```bash
-# Install Node.js 18+ (if not installed)
-# Download from: https://nodejs.org/
+git clone <your-repo-url>
+cd routeiq
 
-# Check version
-node --version  # Should be v18+
+# Install backend
+cd backend && pnpm install
 
-# Install pnpm (recommended package manager)
-npm install -g pnpm
-
-# Install Docker Desktop (for PostgreSQL)
-# Download from: https://www.docker.com/products/docker-desktop/
+# Install frontend
+cd ../frontend && pnpm install
 ```
 
-### 2. Start PostgreSQL Database
+### Step 2: Start Database
 
 ```bash
-# Option A: Using Docker (recommended)
+# From project root
 docker compose up -d
 
-# Option B: Install PostgreSQL locally
-# macOS: brew install postgresql@14
-# Then: brew services start postgresql@14
+# Verify it's running
+docker compose ps
 ```
 
-### 3. Setup Backend
+### Step 3: Setup Backend
 
 ```bash
 cd backend
 
-# Install dependencies
-pnpm install
-
-# Create environment file
+# Copy environment file (defaults work for local dev)
 cp .env.example .env
 
-# Edit .env if needed (default values work for Docker setup)
-# DATABASE_URL="postgresql://routeiq:password@localhost:5432/routeiq_dev"
-# JWT_SECRET="your-super-secret-key-change-in-production-min-32-chars"
-
-# Run database migrations
+# Run migrations and seed data
 pnpm prisma migrate dev
-
-# Seed database with exercises and demo user
 pnpm prisma db seed
 
-# Start development server
+# Start server (leave this running)
 pnpm dev
 ```
 
-The backend should now be running on **http://localhost:3001**
+Backend runs on **http://localhost:3001** ✅
 
-### 4. Test the API
+### Step 4: Start Frontend
 
-```bash
-# Open a new terminal and test health check
-curl http://localhost:3001/health
-
-# Should return:
-# {"status":"ok","timestamp":"...","uptime":...}
-```
-
-### 5. Register a Test User
+Open a **new terminal**:
 
 ```bash
-# Register
-curl -X POST http://localhost:3001/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "you@example.com",
-    "password": "password123",
-    "firstName": "Your Name"
-  }'
+cd frontend
 
-# You should get back a user object and JWT token
+# Copy environment file
+cp .env.local.example .env.local
+
+# Start dev server (leave this running)
+pnpm dev
 ```
 
-### 6. View Your Database
+Frontend runs on **http://localhost:3000** ✅
 
-```bash
-cd backend
+### Step 5: Test the App
 
-# Open Prisma Studio (database GUI)
-pnpm prisma studio
-
-# Opens in browser at http://localhost:5555
-# You can view and edit all data here
-```
+1. Open **http://localhost:3000**
+2. Login with demo account:
+   - Email: `demo@routeiq.com`
+   - Password: `password123`
+3. Explore the dashboard and log an activity!
 
 ## 📂 Project Structure Overview
 
@@ -196,21 +184,23 @@ curl http://localhost:3001/api/auth/me \
 - Migrations ready
 - Seed data (exercises)
 
-## 🚧 What's Next
+## What's Working Now
 
-### Immediate (Phase 1 MVP):
-1. **Routes API** - Create/list/view running routes
-2. **Activities API** - Log and view runs
-3. **Frontend Setup** - Next.js app with dashboard
-4. **Map Integration** - Display routes with Leaflet.js
+✅ Complete user authentication (register/login)
+✅ Activity logging with 10+ metrics
+✅ Dashboard with real-time stats
+✅ Activity history and filtering
+✅ Routes list and filtering
+✅ Responsive design (mobile/tablet/desktop)
 
-### Soon (Phase 2-3):
-5. **Workout Logging** - Implement workout tracking
-6. **Statistics** - Dashboard with charts
-7. **Strava Integration** - OAuth sync
+## What's Missing (See TODO.md)
 
-### Later (Phase 4):
-8. **Cross-Training Insights** - The magic correlation features
+🚧 Map-based route creation (Leaflet integration needed)
+🚧 Public route discovery
+🚧 Dashboard charts (Recharts installed but unused)
+🚧 Activity detail pages
+🚧 Strava OAuth integration (0%)
+🚧 User settings page
 
 ## 💡 Development Tips
 
@@ -257,32 +247,24 @@ docker compose logs postgres
    pnpm prisma generate
    ```
 
-## 📖 Documentation
+## Documentation
 
 - **[README.md](README.md)** - Project overview
-- **[ROADMAP.md](docs/ROADMAP.md)** - Full product roadmap
-- **[DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md)** - Complete database docs
-- **[SETUP.md](docs/SETUP.md)** - Detailed setup guide
+- **[TODO.md](docs/TODO.md)** - Detailed implementation roadmap
+- **[ROADMAP.md](docs/ROADMAP.md)** - Product phases and vision
+- **[DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md)** - Complete schema
+- **[SETUP.md](docs/SETUP.md)** - Detailed setup + troubleshooting
+- **[backend/API_EXAMPLES.md](backend/API_EXAMPLES.md)** - API documentation
 
-## 🎉 You're Ready!
+## Need Help?
 
-Once you have PostgreSQL running and dependencies installed:
+**Common Issues:**
+- "Cannot connect to database" → `docker compose restart`
+- "Port already in use" → `lsof -ti:3001 | xargs kill -9`
+- "Prisma client error" → `cd backend && pnpm prisma generate`
 
-```bash
-cd backend
-pnpm install
-pnpm prisma migrate dev
-pnpm prisma db seed
-pnpm dev
-```
-
-Then test with:
-```bash
-curl http://localhost:3001/health
-```
-
-If you see `{"status":"ok"...}`, you're all set! 🚀
+See [docs/SETUP.md](docs/SETUP.md) for detailed troubleshooting.
 
 ---
 
-**Questions?** Check the docs/ folder or open an issue.
+**Happy running! 🏃‍♂️** Built with Node.js, Next.js, PostgreSQL, and Prisma.

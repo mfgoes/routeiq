@@ -6,9 +6,9 @@ RouteIQ helps runners discover optimal routes using advanced data analysis from 
 
 ## Project Status
 
-🎉 **Phase 1 - Full-Stack MVP COMPLETE!**
+🚧 **Phase 1 - Full-Stack MVP IN PROGRESS**
 
-**Backend ✅**
+**Backend ✅ (100%)**
 - [x] Express API with 16 endpoints
 - [x] PostgreSQL database (11 models)
 - [x] JWT authentication
@@ -16,18 +16,28 @@ RouteIQ helps runners discover optimal routes using advanced data analysis from 
 - [x] Activities CRUD + statistics
 - [x] 22 exercises pre-seeded
 
-**Frontend ✅**
+**Frontend 🚧 (40%)**
 - [x] Next.js 14 app with TypeScript
 - [x] Login/Register pages
-- [x] Dashboard with stats & graphs
-- [x] Activity logging form
+- [x] Dashboard with basic stat cards
+- [x] Activity logging form (basic)
 - [x] Activity history table
 - [x] Responsive design (mobile/tablet/desktop)
+- [x] Routes list page with filtering
+- [x] Map components (RouteMap, RouteDrawer)
+- [ ] **CRITICAL:** Route creation UI (button exists but disabled)
+- [ ] **CRITICAL:** Map-based route drawing interface
+- [ ] **CRITICAL:** Route detail pages
+- [ ] **CRITICAL:** Public route discovery/browse UI
+- [ ] Dashboard charts/graphs (Recharts installed but unused)
+- [ ] Activity detail pages (links go nowhere)
+- [ ] Route selector in activity form
+- [ ] User settings page
+- [ ] Strava OAuth integration (0% - only DB schema exists)
 
-**Next Steps:**
-- [ ] Map visualization (Leaflet.js) - Phase 1
-- [ ] Workout logging UI - Phase 3
-- [ ] Cross-training insights - Phase 4
+**Phase 1 Completion Estimate: ~60% overall** (Backend done, Frontend partially complete)
+
+📋 **See [docs/TODO.md](docs/TODO.md) for detailed implementation roadmap**
 
 ## Tech Stack
 
@@ -37,10 +47,13 @@ RouteIQ helps runners discover optimal routes using advanced data analysis from 
 - JWT authentication
 - Zod validation
 
-**Frontend:** (Coming soon)
-- Next.js 14 (React)
-- Tailwind CSS
-- Leaflet.js for maps
+**Frontend:**
+- Next.js 14 (App Router) with TypeScript
+- React 18 with Server Components
+- Tailwind CSS for styling
+- Leaflet.js for interactive maps
+- Recharts for data visualization (installed, not yet used)
+- Axios for API communication
 
 **DevOps:**
 - Local PostgreSQL (local development)
@@ -262,19 +275,24 @@ pnpm prisma migrate reset
 
 ## Documentation
 
-- **[ROADMAP.md](docs/ROADMAP.md)** - Product development roadmap
-- **[DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md)** - Complete database schema
-- **[SETUP.md](docs/SETUP.md)** - Detailed development setup
-- **[CLAUDE.md](docs/CLAUDE.md)** - Project strategy and goals
+- **[GETTING_STARTED.md](GETTING_STARTED.md)** - Quick setup guide (start here!)
+- **[docs/TODO.md](docs/TODO.md)** - Detailed implementation roadmap
+- **[docs/ROADMAP.md](docs/ROADMAP.md)** - Product vision and phases
+- **[docs/DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md)** - Complete database schema
+- **[docs/SETUP.md](docs/SETUP.md)** - Detailed setup + troubleshooting
+- **[docs/CLAUDE.md](docs/CLAUDE.md)** - Project strategy and goals
+- **[docs/styleguide.md](docs/styleguide.md)** - Frontend design system
+- **[backend/API_EXAMPLES.md](backend/API_EXAMPLES.md)** - API documentation
 
 ## Roadmap
 
-### Phase 1: Running MVP (Current)
-- ✅ Backend setup
-- ✅ Authentication
-- 🚧 Route generation
-- 🚧 Activity tracking
-- 🚧 Basic dashboard
+### Phase 1: Running MVP (60% Complete)
+- ✅ Backend API (100%)
+- ✅ Authentication (100%)
+- 🚧 Route creation & discovery (30% - list/display works, creation blocked)
+- ✅ Activity tracking (80% - logging works, details page missing)
+- 🚧 Dashboard (60% - stats work, charts missing)
+- ❌ Strava integration (0%)
 
 ### Phase 2: Advanced Running
 - Weather integration
