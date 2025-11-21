@@ -216,15 +216,18 @@ async function main() {
     },
   ];
 
-  for (const exercise of exercises) {
-    await prisma.exercise.upsert({
-      where: { name: exercise.name },
-      update: {},
-      create: exercise,
-    });
-  }
+  // Check if exercises already exist
+  const existingCount = await prisma.exercise.count();
 
-  console.log(`✅ Seeded ${exercises.length} exercises`);
+  if (existingCount === 0) {
+    await prisma.exercise.createMany({
+      data: exercises,
+      skipDuplicates: true,
+    });
+    console.log(`✅ Seeded ${exercises.length} exercises`);
+  } else {
+    console.log(`ℹ️  Skipping exercises - ${existingCount} already exist`);
+  }
 
   // Create a demo user (for testing)
   const demoUser = await prisma.user.upsert({
