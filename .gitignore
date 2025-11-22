@@ -49,3 +49,7 @@ temp/
 
 # OS
 Thumbs.db
+
+# Deployment
+.vercel
+.railway
