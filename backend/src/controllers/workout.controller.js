@@ -89,6 +89,7 @@ export async function listWorkouts(req, res, next) {
 
     const where = {
       userId: req.user.id,
+      isTemplate: false,
       ...(workoutType && { workoutType }),
       ...(startDate && {
         startedAt: {
@@ -337,6 +338,223 @@ export async function deleteWorkout(req, res, next) {
     res.json({
       message: 'Workout deleted successfully',
     });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Get last exercise weight for progressive overload
+export async function getLastExerciseWeight(req, res, next) {
+  try {
+    const { exerciseId } = req.params;
+
+    // Find the most recent workout containing this exercise
+    const lastWorkout = await prisma.workout.findFirst({
+      where: {
+        userId: req.user.id,
+        exercises: {
+          some: { exerciseId },
+        },
+      },
+      orderBy: { startedAt: 'desc' },
+      include: {
+        exercises: {
+          where: { exerciseId },
+          select: {
+            sets: true,
+          },
+        },
+      },
+    });
+
+    if (!lastWorkout || lastWorkout.exercises.length === 0) {
+      return res.json({
+        exerciseId,
+        lastWeight: 0,
+        lastWorkoutDate: null,
+      });
+    }
+
+    // Calculate average weight from last workout
+    const sets = lastWorkout.exercises[0].sets;
+    const weightsWithValues = sets
+      .map(set => parseFloat(set.weight) || 0)
+      .filter(w => w > 0);
+
+    const avgWeight = weightsWithValues.length > 0
+      ? weightsWithValues.reduce((sum, w) => sum + w, 0) / weightsWithValues.length
+      : 0;
+
+    res.json({
+      exerciseId,
+      lastWeight: Math.round(avgWeight * 2) / 2, // Round to nearest 0.5kg
+      lastWorkoutDate: lastWorkout.startedAt,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// ============================================================================
+// WORKOUT TEMPLATES
+// ============================================================================
+
+// List user's workout templates
+export async function listTemplates(req, res, next) {
+  try {
+    const templates = await prisma.workout.findMany({
+      where: {
+        userId: req.user.id,
+        isTemplate: true,
+      },
+      include: {
+        exercises: {
+          include: {
+            exercise: true,
+          },
+          orderBy: {
+            exerciseOrder: 'asc',
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    res.json({ templates });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Create workout template
+export async function createTemplate(req, res, next) {
+  try {
+    const validatedData = createWorkoutSchema.omit({ startedAt: true, completedAt: true }).parse(req.body);
+
+    // Calculate totals
+    let totalSets = 0;
+    let totalReps = 0;
+    let totalVolume = 0;
+
+    const exercisesWithTotals = validatedData.exercises.map((exercise) => {
+      const exerciseTotalSets = exercise.sets.length;
+      const exerciseTotalReps = exercise.sets.reduce((sum, set) => sum + set.reps, 0);
+      const exerciseTotalVolume = exercise.sets.reduce(
+        (sum, set) => sum + (set.weight || 0) * set.reps,
+        0
+      );
+      const exerciseMaxWeight = Math.max(...exercise.sets.map((s) => s.weight || 0), 0);
+
+      totalSets += exerciseTotalSets;
+      totalReps += exerciseTotalReps;
+      totalVolume += exerciseTotalVolume;
+
+      return {
+        exerciseId: exercise.exerciseId,
+        exerciseOrder: exercise.exerciseOrder,
+        sets: exercise.sets,
+        notes: exercise.notes,
+        totalSets: exerciseTotalSets,
+        totalReps: exerciseTotalReps,
+        totalVolume: exerciseTotalVolume,
+        maxWeight: exerciseMaxWeight,
+      };
+    });
+
+    const template = await prisma.workout.create({
+      data: {
+        userId: req.user.id,
+        name: validatedData.name,
+        workoutType: validatedData.workoutType,
+        isTemplate: true,
+        notes: validatedData.notes,
+        totalVolume,
+        totalReps,
+        exercises: {
+          create: exercisesWithTotals,
+        },
+      },
+      include: {
+        exercises: {
+          include: {
+            exercise: true,
+          },
+          orderBy: {
+            exerciseOrder: 'asc',
+          },
+        },
+      },
+    });
+
+    res.status(201).json({ template });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        message: 'Invalid template data',
+        errors: error.errors,
+      });
+    }
+    next(error);
+  }
+}
+
+// Get single template
+export async function getTemplate(req, res, next) {
+  try {
+    const { id } = req.params;
+
+    const template = await prisma.workout.findFirst({
+      where: {
+        id,
+        userId: req.user.id,
+        isTemplate: true,
+      },
+      include: {
+        exercises: {
+          include: {
+            exercise: true,
+          },
+          orderBy: {
+            exerciseOrder: 'asc',
+          },
+        },
+      },
+    });
+
+    if (!template) {
+      return res.status(404).json({ message: 'Template not found' });
+    }
+
+    res.json({ template });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Delete template
+export async function deleteTemplate(req, res, next) {
+  try {
+    const { id } = req.params;
+
+    const template = await prisma.workout.findFirst({
+      where: {
+        id,
+        userId: req.user.id,
+        isTemplate: true,
+      },
+    });
+
+    if (!template) {
+      return res.status(404).json({ message: 'Template not found' });
+    }
+
+    await prisma.workout.delete({
+      where: { id },
+    });
+
+    res.json({ message: 'Template deleted successfully' });
   } catch (error) {
     next(error);
   }

@@ -24,7 +24,16 @@
       "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5MWE4ZTNhNi1hYjU2LTRmOTEtYTYwNS1kODgyMGE1YzZkMDMiLCJpYXQiOjE3NjM3NTk4NjksImV4cCI6MTc2NDM2NDY2OX0.MsBv_lpJwlit1zZdN30ZI808rb9UC4UT5hlxOEHQG8g\")",
       "Bash(npx prisma db seed:*)",
       "Bash(./test-workout.sh:*)",
-      "Bash(bash:*)"
+      "Bash(bash:*)",
+      "Bash(mkdir:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill -9)",
+      "Bash(npx prisma migrate:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(ln:*)",
+      "Bash(git checkout:*)",
+      "Bash(/dev/null)"
     ],
     "deny": [],
     "ask": []

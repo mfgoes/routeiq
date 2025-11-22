@@ -55,7 +55,7 @@ footer .logo-image {
 
 /* CTA Section */
 .cta-section {
-	background-color: #374151;
+	background-color: #1F2937;
 	color: white;
 	padding: 5rem 0;
 }
@@ -93,7 +93,7 @@ footer .logo-image {
 .feature-checkmark {
 	width: 1.5rem;
 	height: 1.5rem;
-	background-color: #b91c1c;
+	background-color: #EF4444;
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
@@ -116,7 +116,7 @@ footer .logo-image {
 }
 
 .pricing-card-pro {
-	background-color: #b91c1c;
+	background-color: #EF4444;
 	color: white;
 	border-radius: 0.75rem;
 	padding: 2rem;

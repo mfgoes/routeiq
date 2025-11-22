@@ -242,8 +242,10 @@ model Workout {
 
   name      String?
   workoutType String? @map("workout_type")
-  startedAt DateTime @map("started_at")
+  startedAt DateTime? @map("started_at")
   completedAt DateTime? @map("completed_at")
+
+  isTemplate Boolean @default(false) @map("is_template")
 
   totalDuration Int? @map("total_duration") // seconds
   totalVolume Decimal? @map("total_volume") @db.Decimal(10, 2)
@@ -263,6 +265,7 @@ model Workout {
   exercises WorkoutExercise[]
 
   @@index([userId])
+  @@index([userId, isTemplate])
   @@index([userId, startedAt(sort: Desc)])
   @@map("workouts")
 }

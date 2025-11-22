@@ -3,9 +3,11 @@ tailwind.config = {
 	theme: {
 		extend: {
 			colors: {
+				'brand-red': '#EF4444',
+				'brand-dark': '#1F2937',
 				brand: {
-					red: '#B91C1C',
-					dark: '#374151'
+					red: '#EF4444',
+					dark: '#1F2937'
 				}
 			},
 			fontFamily: {
@@ -37,7 +39,7 @@ tailwind.config = {
 			},
 			boxShadow: {
 				'soft': '0 2px 15px 0 rgba(0, 0, 0, 0.1)',
-				'brand': '0 4px 20px 0 rgba(185, 28, 28, 0.2)'
+				'brand': '0 4px 20px 0 rgba(239, 68, 68, 0.2)'
 			}
 		}
 	},

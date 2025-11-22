@@ -21,6 +21,7 @@ export interface WorkoutSet {
   restSeconds?: number;
   rpe?: number;
   notes?: string;
+  completed?: boolean;
 }
 
 export interface WorkoutExerciseInput {

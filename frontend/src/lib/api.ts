@@ -101,6 +101,10 @@ export const workoutsAPI = {
   getExercises: (params?: any) =>
     api.get('/workouts/exercises', { params }),
 
+  // Get last exercise weight for progressive overload
+  getLastExerciseWeight: (exerciseId: string) =>
+    api.get(`/workouts/exercises/${exerciseId}/last-weight`),
+
   // List workouts
   list: (params?: any) =>
     api.get('/workouts', { params }),
@@ -120,6 +124,19 @@ export const workoutsAPI = {
   // Delete workout
   delete: (id: string) =>
     api.delete(`/workouts/${id}`),
+
+  // Templates
+  listTemplates: () =>
+    api.get('/workouts/templates'),
+
+  createTemplate: (data: any) =>
+    api.post('/workouts/templates', data),
+
+  getTemplate: (id: string) =>
+    api.get(`/workouts/templates/${id}`),
+
+  deleteTemplate: (id: string) =>
+    api.delete(`/workouts/templates/${id}`),
 };
 
 export default api;

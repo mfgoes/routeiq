@@ -7,6 +7,11 @@ import {
   getWorkout,
   updateWorkout,
   deleteWorkout,
+  getLastExerciseWeight,
+  listTemplates,
+  createTemplate,
+  getTemplate,
+  deleteTemplate,
 } from '../controllers/workout.controller.js';
 
 const router = express.Router();
@@ -16,6 +21,15 @@ router.use(authenticate);
 
 // Exercises (read-only)
 router.get('/exercises', listExercises);
+
+// Progressive overload helper
+router.get('/exercises/:exerciseId/last-weight', getLastExerciseWeight);
+
+// Templates
+router.get('/templates', listTemplates);
+router.post('/templates', createTemplate);
+router.get('/templates/:id', getTemplate);
+router.delete('/templates/:id', deleteTemplate);
 
 // Workouts
 router.get('/', listWorkouts);
