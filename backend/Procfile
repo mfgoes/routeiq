@@ -1,2 +1,1 @@
-web: node src/index.js
-release: npx prisma migrate deploy && npx prisma generate
+web: npm run deploy
