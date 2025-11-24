@@ -1,0 +1,56 @@
+# Koyeb Deployment Configuration for RouteIQ Backend
+# https://www.koyeb.com/docs/build-and-deploy/configuration-file
+
+app:
+  name: routeiq-backend
+
+services:
+  - name: api
+    type: web
+
+    # Build configuration
+    build:
+      context: .
+      buildpack:
+        run: npm run deploy
+
+    # Instance configuration
+    instance_type: nano  # Free tier: 512 MB RAM, 0.1 vCPU
+
+    # Port configuration
+    ports:
+      - port: 8000
+        protocol: http
+
+    # Health check
+    health_checks:
+      - http:
+          path: /health
+          port: 8000
+          grace_period: 30
+
+    # Auto-scaling (free tier: 1 instance only)
+    scaling:
+      min: 1
+      max: 1
+
+    # Regions (choose closest to your Supabase region)
+    regions:
+      - was  # Washington, DC (US East) - matches Supabase US East region
+
+    # Environment variables (set these in Koyeb dashboard)
+    env:
+      - name: NODE_ENV
+        value: production
+      - name: PORT
+        value: "8000"
+      # DATABASE_URL - set in dashboard with Supabase connection string
+      # JWT_SECRET - set in dashboard (generate secure secret)
+      # JWT_EXPIRES_IN - set in dashboard (e.g., "7d")
+      # BCRYPT_ROUNDS - set in dashboard (e.g., "12")
+      # CORS_ORIGIN - set in dashboard with Vercel frontend URL
+
+    # Restart policy
+    restart_policy:
+      condition: on-failure
+      max_retries: 10
