@@ -33,7 +33,13 @@
       "Bash(git commit:*)",
       "Bash(ln:*)",
       "Bash(git checkout:*)",
-      "Bash(/dev/null)"
+      "Bash(/dev/null)",
+      "Bash(mv:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(rm:*)",
+      "Bash(vercel --version:*)",
+      "Bash(find:*)",
+      "Bash(git -C /Users/mischa.van.der.goes/Documents/GitHub/routeiq log --oneline -10)"
     ],
     "deny": [],
     "ask": []
