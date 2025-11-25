@@ -8,6 +8,7 @@
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
     "build": "npx prisma generate",
+    "vercel-build": "npx prisma generate",
     "deploy": "npx prisma migrate deploy && node src/index.js",
     "test": "NODE_ENV=test jest --runInBand",
     "test:watch": "NODE_ENV=test jest --watch",

@@ -1,0 +1,12 @@
+node_modules
+.env
+.env.*
+.env.local
+.env.production
+*.log
+.DS_Store
+tests
+.koyeb
+prisma/migrations
+README.md
+API_EXAMPLES.md

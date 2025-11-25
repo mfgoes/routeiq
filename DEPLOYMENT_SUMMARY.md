@@ -1,119 +1,134 @@
-# 🚀 RouteIQ Deployment - Quick Start
+# RouteIQ Deployment Summary
 
-**Deploy your app for FREE in under 20 minutes!**
+## Current Infrastructure
 
----
+### Frontend
+- **Platform**: Vercel
+- **URL**: https://routeiq-nine.vercel.app
+- **Framework**: Next.js 14
+- **Build**: Automatic deployment from `main` branch
+- **Root Directory**: `/frontend`
 
-## What You'll Get
+### Backend
+- **Platform**: Vercel (Serverless Functions)
+- **URL**: https://routeiq-backend.vercel.app
+- **Framework**: Express.js on Node.js
+- **Build**: Automatic deployment from `main` branch
+- **Root Directory**: `/backend`
+- **Function Timeout**: 10 seconds (free tier)
+- **Memory**: 1024 MB
 
-✅ **Frontend** hosted on Vercel (free forever for personal projects)
-✅ **Backend API** hosted on Railway (free $5/month credit)
-✅ **PostgreSQL Database** hosted on Railway (included)
-✅ **HTTPS** enabled automatically
-✅ **Custom subdomain** (e.g., `routeiq.vercel.app`)
-✅ **Auto-deploy** on every git push to main
+### Database
+- **Platform**: Supabase
+- **Type**: PostgreSQL
+- **Region**: EU West 3 (Paris)
+- **Connection Pooling**: Enabled (PgBouncer)
 
-**Total cost: $0** (free tier is generous for personal projects)
+## Environment Variables
 
----
+### Backend (Vercel Project: routeiq-backend)
 
-## Quick Start (3 Steps)
+Required environment variables in Vercel Dashboard:
 
-### 1️⃣ Deploy Backend (Railway) - 10 minutes
-
-1. Go to [railway.app](https://railway.app) → Sign in with GitHub
-2. "New Project" → "Deploy from GitHub repo" → Select `routeiq`
-3. Add PostgreSQL database (click "New" → "Database" → "PostgreSQL")
-4. Configure backend service:
-   - Root directory: `backend`
-   - Add environment variables (see checklist below)
-5. Generate domain & save the URL
-
-### 2️⃣ Deploy Frontend (Vercel) - 5 minutes
-
-1. Go to [vercel.com](https://vercel.com) → Sign in with GitHub
-2. "Add New Project" → Import `routeiq`
-3. Configure:
-   - Root directory: `frontend`
-   - Add environment variable: `NEXT_PUBLIC_API_URL=<your-railway-backend-url>/api`
-4. Click "Deploy" & save the URL
-
-### 3️⃣ Connect Them - 2 minutes
-
-1. Go back to Railway → Backend Variables
-2. Update `CORS_ORIGIN` to your Vercel URL
-3. Test your live app!
-
----
-
-## Required Environment Variables
-
-### Backend (Railway)
-```bash
-JWT_SECRET=<generate-with-generate-secrets.js>
+```
+NODE_ENV=production
+DATABASE_URL=postgresql://postgres.vkptmbsrtkjprbhptdku:[PASSWORD]@aws-1-eu-west-3.pooler.supabase.com:6543/postgres?pgbouncer=true
+DIRECT_URL=postgresql://postgres.vkptmbsrtkjprbhptdku:[PASSWORD]@aws-1-eu-west-3.pooler.supabase.com:5432/postgres
+JWT_SECRET=[64-char-hex-secret]
 JWT_EXPIRES_IN=7d
 BCRYPT_ROUNDS=12
-NODE_ENV=production
-PORT=3001
-CORS_ORIGIN=<your-vercel-url>
-DATABASE_URL=<auto-populated-by-railway>
+CORS_ORIGIN=https://routeiq-nine.vercel.app
 ```
 
-### Frontend (Vercel)
+### Frontend (Vercel Project: routeiq-nine)
+
+```
+NEXT_PUBLIC_API_URL=https://routeiq-backend.vercel.app/api
+```
+
+## Deployment Process
+
+### Backend Deployment
+
+1. **Automatic**: Push to `main` branch triggers Vercel deployment
+2. **Build Command**: `npm run vercel-build` (generates Prisma Client)
+3. **Health Check**: `https://routeiq-backend.vercel.app/health`
+
+### Frontend Deployment
+
+1. **Automatic**: Push to `main` branch triggers Vercel deployment
+2. **Build Command**: `npm run build` (Next.js build)
+3. **Live URL**: `https://routeiq-nine.vercel.app`
+
+## Database Migrations
+
+Database migrations are run manually (not during Vercel deployment):
+
 ```bash
-NEXT_PUBLIC_API_URL=<your-railway-url>/api
+# From local machine or CI/CD
+cd backend
+npx prisma migrate deploy
 ```
 
----
+**Important**: Never run migrations from Vercel serverless functions to avoid race conditions.
 
-## Generate Secrets
+## Monitoring & Logs
 
-Before deploying, run:
+- **Vercel Dashboard**: https://vercel.com/dashboard
+- **Frontend Logs**: Vercel → routeiq-nine → Deployments → Functions
+- **Backend Logs**: Vercel → routeiq-backend → Deployments → Functions
+- **Database Logs**: Supabase Dashboard → Logs
+
+## Rollback Strategy
+
+If deployment issues occur:
+
+1. **Instant Rollback**: Vercel Dashboard → Deployments → Select previous deployment → Promote to Production
+2. **Environment Variable Issues**: Verify all variables are set correctly in Vercel Dashboard
+3. **Database Issues**: Check Supabase connection status and verify connection strings
+
+## Local Development
+
+### Frontend
+
 ```bash
-node generate-secrets.js
+cd frontend
+npm install
+npm run dev
+# Runs on http://localhost:3000
 ```
 
-Copy the generated `JWT_SECRET` to Railway.
+### Backend
 
----
+```bash
+cd backend
+npm install
+npx prisma generate
+npm run dev
+# Runs on http://localhost:3001
+```
 
-## Complete Guides
+## Cost
 
-📖 **Full deployment guide**: Read [DEPLOYMENT.md](./DEPLOYMENT.md)
-✅ **Step-by-step checklist**: Read [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)
+- **Vercel Frontend**: Free tier
+- **Vercel Backend**: Free tier
+- **Supabase Database**: Free tier
+- **Total**: $0/month
 
----
+### Free Tier Limits
 
-## Files Created for Deployment
+- Vercel: 100 GB bandwidth/month, 100 GB-hours compute
+- Supabase: 500 MB database, 2 GB bandwidth/month
 
-- `vercel.json` - Vercel configuration
-- `backend/railway.json` - Railway configuration
-- `backend/Procfile` - Process and release commands
-- `backend/.nixpacks` - Build configuration
-- `backend/.env.production.example` - Production env template
-- `frontend/.env.production.example` - Production env template
-- `generate-secrets.js` - Security secret generator
+## Architecture Notes
 
----
+- Backend runs as Vercel serverless function (not traditional server)
+- Cold starts may occur after periods of inactivity (2-5 seconds)
+- Database connection pooling (PgBouncer) handles serverless connection limits
+- CORS configured to allow frontend domain only
 
-## Support
+## Migration History
 
-- 📚 Railway Docs: https://docs.railway.app
-- 📚 Vercel Docs: https://vercel.com/docs
-- 💬 Railway Discord: https://discord.gg/railway
-- 💬 Vercel Discord: https://discord.gg/vercel
-
----
-
-## What's Next?
-
-After deployment:
-1. ✅ Test authentication flow
-2. ✅ Create sample workout/route/activity
-3. ✅ Share your live URL!
-4. 🎨 Add custom domain (optional, ~$10/year)
-5. 📊 Monitor usage in Railway & Vercel dashboards
-
----
-
-**Ready to deploy? Follow the full guide in [DEPLOYMENT.md](./DEPLOYMENT.md)!**
+- **2025-11**: Migrated backend from Koyeb to Vercel for unified platform management
+- **2025-11**: Migrated from Railway to Koyeb + Supabase
+- **Initial**: Railway (all-in-one platform)
