@@ -43,6 +43,8 @@ cd ../frontend && pnpm install
 
 ### Step 2: Start Database
 
+**For local development**, use Docker:
+
 ```bash
 # From project root
 docker compose up -d
@@ -50,6 +52,8 @@ docker compose up -d
 # Verify it's running
 docker compose ps
 ```
+
+**Note:** The production deployment uses Supabase (PostgreSQL) hosted separately. See [DEPLOYMENT_SUMMARY.md](../DEPLOYMENT_SUMMARY.md) for production setup.
 
 ### Step 3: Setup Backend
 
@@ -247,8 +251,21 @@ docker compose logs postgres
    pnpm prisma generate
    ```
 
+## Deployment
+
+**Production URLs:**
+- **Frontend:** https://routeiq-nine.vercel.app
+- **Backend API:** https://routeiq-backend.vercel.app/api
+- **Platform:** Vercel (serverless functions)
+- **Database:** Supabase (PostgreSQL)
+
+**Deployment Process:**
+- Automatic deployment on push to `main` branch
+- See [DEPLOYMENT_SUMMARY.md](../DEPLOYMENT_SUMMARY.md) for full details
+
 ## Documentation
 
+- **[DEPLOYMENT_SUMMARY.md](../DEPLOYMENT_SUMMARY.md)** - Complete deployment guide
 - **[README.md](README.md)** - Project overview
 - **[TODO.md](docs/TODO.md)** - Detailed implementation roadmap
 - **[ROADMAP.md](docs/ROADMAP.md)** - Product phases and vision

@@ -245,32 +245,42 @@ NEXT_PUBLIC_API_URL=http://localhost:3001/api
 
 ## Deployment
 
-### Vercel (Recommended)
+The frontend is deployed on **Vercel** with automatic deployments from the `main` branch.
+
+### Production Deployment
+- **URL:** https://routeiq-nine.vercel.app
+- **Platform:** Vercel
+- **Root Directory:** `/frontend`
+- **Build Command:** `npm run build`
+- **Framework:** Next.js
+
+### Environment Variables on Vercel
+Set in Vercel Dashboard → Project Settings → Environment Variables:
+
+```env
+NEXT_PUBLIC_API_URL=https://routeiq-backend.vercel.app/api
+```
+
+### Automatic Deployment
+Every push to the `main` branch automatically triggers a deployment to production. Preview deployments are created for pull requests.
+
+### Manual Deployment (if needed)
 
 ```bash
 # Install Vercel CLI
 npm i -g vercel
 
-# Deploy
+# Deploy preview
 vercel
 
-# Production deploy
+# Deploy to production
 vercel --prod
 ```
 
-### Environment Variables on Vercel
-- Set `NEXT_PUBLIC_API_URL` in Vercel dashboard
-- Example: `https://api.routeiq.com/api`
+### Vercel Configuration
+The project uses Next.js defaults. See `vercel.json` in the project root for build settings.
 
-### Build Command
-```bash
-pnpm build
-```
-
-### Start Command
-```bash
-pnpm start
-```
+For complete deployment documentation, see [DEPLOYMENT_SUMMARY.md](../DEPLOYMENT_SUMMARY.md).
 
 ## Testing
 

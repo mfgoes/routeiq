@@ -20,10 +20,11 @@
 - **Forms:** React Hook Form + Zod
 
 ### DevOps
-- **Development:** Local PostgreSQL (PostgreSQL 14+)
-- **Hosting:** Vercel (frontend) + Railway (backend)
-- **CI/CD:** GitHub Actions
-- **Monitoring:** Sentry (errors) + Plausible (analytics)
+- **Development:** Local PostgreSQL (PostgreSQL 14+) or Docker
+- **Hosting:** Vercel (frontend + backend serverless functions)
+- **Database:** Supabase (PostgreSQL with connection pooling)
+- **CI/CD:** Automatic deployment via Vercel (push to main)
+- **Monitoring:** Vercel Analytics + Logs
 
 ---
 
@@ -280,34 +281,59 @@ DELETE /api/integrations/strava/disconnect   # Remove connection
 
 ## Deployment
 
-### Backend (Railway)
-```bash
-# Install Railway CLI
-npm install -g @railway/cli
+Both frontend and backend are deployed on **Vercel** with automatic deployments from the `main` branch.
 
-# Login and deploy
-railway login
-railway up
+### Backend (Vercel Serverless)
+- **Platform:** Vercel Serverless Functions
+- **URL:** https://routeiq-backend.vercel.app
+- **Root Directory:** `/backend`
+- **Build Command:** `npm run vercel-build` (generates Prisma Client)
+- **Deployment:** Automatic on push to `main`
 
-# Set environment variables in Railway dashboard
+**Environment Variables (set in Vercel Dashboard):**
+```env
+NODE_ENV=production
+DATABASE_URL=postgresql://[user]:[password]@[host]:6543/postgres?pgbouncer=true
+DIRECT_URL=postgresql://[user]:[password]@[host]:5432/postgres
+JWT_SECRET=[64-char-hex-secret]
+JWT_EXPIRES_IN=7d
+BCRYPT_ROUNDS=12
+CORS_ORIGIN=https://routeiq-nine.vercel.app
 ```
 
 ### Frontend (Vercel)
+- **Platform:** Vercel
+- **URL:** https://routeiq-nine.vercel.app
+- **Root Directory:** `/frontend`
+- **Build Command:** `npm run build`
+- **Deployment:** Automatic on push to `main`
+
+**Environment Variables (set in Vercel Dashboard):**
+```env
+NEXT_PUBLIC_API_URL=https://routeiq-backend.vercel.app/api
+```
+
+### Database (Supabase)
+- **Platform:** Supabase (managed PostgreSQL)
+- **Region:** EU West 3 (Paris)
+- **Connection Pooling:** PgBouncer enabled
+- **Migrations:** Run manually via `npx prisma migrate deploy`
+
+**Important:** Never run migrations from Vercel serverless functions to avoid race conditions.
+
+### Manual Deployment (if needed)
 ```bash
 # Install Vercel CLI
 npm install -g vercel
 
-# Deploy
-cd frontend
+# Deploy from local
 vercel
 
 # Production deployment
 vercel --prod
 ```
 
-### Database (Railway or Supabase)
-- Railway: Automatic PostgreSQL provisioning
-- Supabase: Free tier includes PostgreSQL + Auth + Storage
+See [DEPLOYMENT_SUMMARY.md](../DEPLOYMENT_SUMMARY.md) for complete deployment documentation.
 
 ---
 
