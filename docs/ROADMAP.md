@@ -1,14 +1,14 @@
 # RouteIQ Product Roadmap
 
-**🔄 UPDATED STRATEGY (Nov 26, 2024):** Fitness-first approach, prioritizing workout tracking for faster value delivery.
+**🔄 UPDATED STRATEGY (Nov 26, 2026):** Fitness-first, UX-first approach.
 
-**Why the pivot?** Workout tracking is simpler to build, delivers immediate value, and doesn't require complex mapping infrastructure. Route optimization will come later once we validate the core fitness tracking experience.
+**Core Philosophy:** Every feature must improve the user experience. No analytics dashboards or complex features unless they directly solve a real user problem. We prioritize smooth, mobile-first interactions over feature bloat.
 
-**Current Focus:** Make RouteIQ the best workout tracking experience with smart progressive overload features.
+**Current Focus:** Make workout tracking feel effortless - fast, intuitive, mobile-optimized.
 
 ---
 
-## ✅ Phase 1: Fitness Tracking MVP (COMPLETED - Nov 2024)
+## ✅ Phase 1: Fitness Tracking MVP (COMPLETED - Nov 2026)
 **Goal:** Ship a minimal but excellent workout tracking experience
 
 ### Completed Features (v0.2.0)
@@ -33,71 +33,130 @@
 
 ---
 
-## 🚧 Phase 2: Enhanced Workout Experience (NEXT - Dec 2024)
-**Goal:** Polish the workout flow and add essential analytics
+## 🚧 Phase 2: UX Polish & Core Workflows (NEXT - Dec 2026)
+**Goal:** Make the workout experience smooth, fast, and mobile-optimized
 
-### High Priority Features
+**Philosophy:** UX over features. Every change must make the app easier or faster to use.
 
-#### 1. Workout History & Detail Views
-- [ ] **Workout detail page** (`/workouts/[id]`)
-  - Display all exercises, sets, reps, weight for completed workout
-  - Show workout duration, total volume, total reps
-  - Display notes and RPE ratings
-  - Button to "Repeat this workout"
-- [ ] **Exercise performance history**
-  - View all past performances for a specific exercise
-  - Chart showing weight progression over time
-  - Display personal records (PRs) prominently
-- [ ] **Week/month summaries**
-  - Total workouts completed
-  - Most trained muscle groups (chart/visualization)
-  - Consistency streaks (gamification)
-  - Volume trends over time
+### Critical UX Fixes (Must-Have)
 
-#### 2. Improved Dashboard & Stats
-- [ ] **Fix workout stats API endpoint**
-  - Implement `/api/workouts/stats` backend endpoint
-  - Calculate totals, averages, trends by time period
-  - Cache results for performance
-- [ ] **Loading states** for all components
-- [ ] **Error handling** with user-friendly messages
-- [ ] **Toast notifications** for successful actions
-- [ ] **Empty state illustrations** for zero-data scenarios
+#### 1. Mobile-First Improvements
+- [ ] **Larger tap targets** (minimum 44px × 44px)
+  - Bigger buttons for sets, exercises, completion checkboxes
+  - Easy thumb-reach navigation
+  - No accidental taps
+- [ ] **Keyboard doesn't cover inputs**
+  - Auto-scroll to focused input
+  - Smooth transitions when keyboard appears
+  - Save button always visible
+- [ ] **Faster workout logging**
+  - Quick number pad for weight/reps entry
+  - Swipe to copy previous set values
+  - One-tap to mark set complete
+- [ ] **Loading states everywhere**
+  - Skeleton loaders for all data fetches
+  - No blank screens
+  - Instant feedback on actions
 
-#### 3. Template Management
-- [ ] **Edit existing templates**
-  - Modify exercises, sets, reps
-  - Update template name and type
-- [ ] **Duplicate templates**
-  - "Copy template" button
-  - Quick way to create variations
-- [ ] **Delete templates**
-  - Confirmation modal before deletion
-  - Can't delete if used in active workout
-- [ ] **Template categories/tags**
-  - Filter by: Beginner, Intermediate, Advanced
-  - Filter by: Upper, Lower, Full Body, Core
-  - Filter by: Home vs Gym equipment
+#### 2. Edit Completed Workouts (CRITICAL)
+- [ ] **Edit workout button** on workout detail page
+  - User might finish workout too early by accident
+  - Need to add forgotten sets or exercises
+  - Fix typos in weight/reps
+- [ ] **Edit from completion summary screen**
+  - "Made a mistake? Edit workout" button
+  - Takes back to workout form pre-filled
+  - Can modify before final save
+- [ ] **Workout history edit access**
+  - Edit button on each past workout
+  - Full editing capabilities
+  - Track edit timestamp for data integrity
 
-#### 4. Exercise Library Expansion
-- [ ] **Add 30+ more exercises** (target: 50+ total)
-  - Machine exercises (leg press, lat pulldown, cable work)
-  - Bodyweight variations (push-up variations, pistol squats)
-  - Dumbbell-only exercises
-  - Kettlebell exercises
-- [ ] **Exercise detail pages**
-  - Form instructions/tips
-  - Muscle group diagrams
-  - Video links (YouTube embeds)
-  - Equipment needed
-- [ ] **Custom exercise creation**
-  - Users can add their own exercises
-  - Specify name, muscle groups, equipment
+#### 3. Custom Exercise Creation (CRITICAL)
+- [ ] **"Add Custom Exercise" button in workout page**
+  - Shows when exercise dropdown is open
+  - Quick modal/form to create new exercise
+  - Immediately available after creation
+- [ ] **Simple exercise form**
+  - Name (required)
+  - Muscle groups (checkboxes: chest, back, legs, etc.)
+  - Equipment (optional: barbell, dumbbells, bodyweight, machine)
   - Private to user (no sharing yet)
+- [ ] **Custom exercises in dropdown**
+  - Show user's custom exercises at top
+  - Badge/indicator that it's custom
+  - Can edit/delete from settings later
 
-### Medium Priority Features
+#### 4. Progressive Overload Toggle (CRITICAL)
+- [ ] **Global toggle in workout settings**
+  - ON by default: auto-add 5kg to exercises
+  - OFF: start with previous weight or 0kg
+  - Persistent per user
+- [ ] **Per-workout override**
+  - Toggle visible at top of workout page
+  - "Progressive Overload: ON (adds 5kg)"
+  - Easy to turn off for deload weeks
+- [ ] **Configurable increment**
+  - Settings page: choose 2.5kg, 5kg, or 10kg
+  - Different increments for different users
+  - Applies to all exercises when enabled
 
-#### 5. Progressive Overload Intelligence
+#### 5. Smooth Interactions
+- [ ] **Toast notifications** for actions
+  - "Workout saved!" with undo option
+  - "Exercise added"
+  - "Template created"
+- [ ] **Confirmation modals** (only when needed)
+  - "Finish workout with 0 completed sets?"
+  - "Delete template?"
+  - Quick to tap, not annoying
+- [ ] **Undo actions**
+  - Undo deleted set
+  - Undo removed exercise
+  - Undo finished workout (within 5 minutes)
+
+### Important UX Improvements (Should-Have)
+
+#### 6. Better Empty States
+- [ ] **No exercises found** in dropdown
+  - "Add custom exercise" button
+  - Link to browse all exercises
+- [ ] **No workouts yet** on history
+  - "Start your first workout" CTA
+  - Show example template preview
+- [ ] **No templates** on templates page
+  - Walk through creating first template
+  - Or use default templates
+
+#### 7. Template Management
+- [ ] **Edit templates** without destroying history
+  - Modify sets, reps, exercises
+  - Update name
+  - Doesn't affect past workouts using this template
+- [ ] **Duplicate template**
+  - "Copy template" button
+  - Quick variations
+- [ ] **Delete with confirmation**
+  - Can't delete if actively in use
+  - Archive instead of delete (keeps history)
+
+### Lower Priority (Nice-to-Have)
+
+#### 8. Analytics (ONLY if requested by users)
+- [ ] **Simple workout history list**
+  - Scrollable list of past workouts
+  - Tap to view details
+  - No charts unless users ask
+- [ ] **Personal records (PRs)**
+  - Per exercise: highest weight for X reps
+  - Shown on exercise detail page
+  - No complex dashboard
+- [ ] **Basic stats** (if users want it)
+  - Total workouts this week/month
+  - Total volume this week/month
+  - Simple numbers, no fancy charts
+
+**Note:** We will NOT build complex analytics dashboards unless multiple users explicitly request them. UX beats features.
 - [ ] **Smart weight suggestions**
   - If completed all sets/reps easily, suggest +2.5kg next time
   - Based on RPE scores (if RPE < 8, increase weight)
@@ -147,7 +206,7 @@
 
 ---
 
-## 📋 Phase 3: Running Features (Q1 2025)
+## 📋 Phase 3: Running Features (Q1 2027)
 **Goal:** Add basic running/cardio tracking capabilities
 
 **Note:** Running features are deprioritized until workout tracking is solid and validated by users.
@@ -188,7 +247,7 @@
 
 ---
 
-## 📋 Phase 4: Advanced Route Features (Q2 2025)
+## 📋 Phase 4: Advanced Route Features (Q2 2027)
 **Goal:** Build intelligent route optimization (original vision)
 
 **This is where we bring back the "RouteIQ" part of RouteIQ.**
@@ -222,7 +281,7 @@
 
 ---
 
-## 📋 Phase 5: Cross-Training Intelligence (Q3 2025)
+## 📋 Phase 5: Cross-Training Intelligence (Q3 2027)
 **Goal:** Connect gym performance to running performance (unique value prop)
 
 ### Breakthrough Features
@@ -415,47 +474,48 @@
 
 ## 🚀 Release Schedule
 
-### v0.2.0 - Fitness MVP ✅ (Nov 26, 2024)
+### v0.2.0 - Fitness MVP ✅ (Nov 26, 2026)
 - Dashboard redesign
 - Default workout templates
 - Seed script automation
 
-### v0.3.0 - Workout Analytics (Dec 16, 2024)
-- Workout detail pages
-- Exercise history and PRs
-- Weekly/monthly stats dashboard
-- Fix workout stats API endpoint
+### v0.3.0 - UX Polish & Critical Features (Dec 16, 2026)
+- Edit completed workouts
+- Custom exercise creation with "Add" button
+- Progressive overload toggle (5kg default)
+- Mobile-first improvements (larger tap targets, keyboard handling)
+- Toast notifications and smooth interactions
 
-### v0.4.0 - Template Management (Jan 6, 2025)
+### v0.4.0 - Template Management (Jan 6, 2027)
 - Edit/delete templates
-- Template categories
-- Exercise library expansion (+30 exercises)
-- Custom exercise creation
+- Duplicate templates
+- Better empty states
+- Template quick-start improvements
 
-### v0.5.0 - Progressive Overload (Jan 27, 2025)
-- Smart weight suggestions
-- Enhanced rest timer
-- Workout notes and ratings
-- Mobile UX improvements
+### v0.5.0 - Workout History (Jan 27, 2027)
+- Simple workout history list (no fancy charts)
+- Workout detail pages
+- Personal records (PRs) per exercise
+- Basic stats (only if users request)
 
-### v0.6.0 - Running Features (Feb 17, 2025)
+### v0.6.0 - Running Features (Feb 17, 2027)
 - Indoor run logging
 - Run history and stats
 - Personal records for runs
 - Simple route management
 
-### v1.0.0 - Full Product (March 2025)
+### v1.0.0 - Full Product (March 2027)
 - Route generation with maps
 - GPS tracking (PWA)
 - Route discovery
 - Polish and bug fixes
 
-### v1.5.0 - Cross-Training Intelligence (Q2 2025)
+### v1.5.0 - Cross-Training Intelligence (Q2 2027)
 - Performance correlations
 - Recovery recommendations
 - Integrated training calendar
 
-### v2.0.0 - Mobile App & AI (Q3-Q4 2025)
+### v2.0.0 - Mobile App & AI (Q3-Q4 2027)
 - Native mobile apps
 - AI training coach
 - Wearable integrations
@@ -517,5 +577,5 @@
 
 ---
 
-**Last updated:** November 26, 2024
-**Next review:** December 16, 2024 (after v0.3.0 release)
+**Last updated:** November 26, 2026
+**Next review:** December 16, 2026 (after v0.3.0 release)
