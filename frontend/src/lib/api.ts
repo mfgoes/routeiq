@@ -125,6 +125,10 @@ export const workoutsAPI = {
   delete: (id: string) =>
     api.delete(`/workouts/${id}`),
 
+  // Get workout stats
+  getStats: (params?: any) =>
+    api.get('/workouts/stats', { params }),
+
   // Templates
   listTemplates: () =>
     api.get('/workouts/templates'),
