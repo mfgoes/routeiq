@@ -41,17 +41,10 @@
 ### Critical UX Fixes (Must-Have)
 
 #### 1. Mobile-First Improvements
-- [ ] **Larger tap targets** (minimum 44px × 44px)
-  - Bigger buttons for sets, exercises, completion checkboxes
-  - Easy thumb-reach navigation
-  - No accidental taps
 - [ ] **Keyboard doesn't cover inputs**
-  - Auto-scroll to focused input
-  - Smooth transitions when keyboard appears
   - Save button always visible
 - [ ] **Faster workout logging**
   - Quick number pad for weight/reps entry
-  - Swipe to copy previous set values
   - One-tap to mark set complete
 - [ ] **Loading states everywhere**
   - Skeleton loaders for all data fetches
@@ -86,6 +79,10 @@
   - Show user's custom exercises at top
   - Badge/indicator that it's custom
   - Can edit/delete from settings later
+- [ ] **Ability to add runs to workouts**
+  - Users can also add 'indoor run' as workout. this special workout doesn't have weights. 
+  - Consider other 'non weight' trainings ie yoga, etc. Keep inputs as simple as possible. 
+
 
 #### 4. Progressive Overload Toggle (CRITICAL)
 - [ ] **Global toggle in workout settings**
@@ -142,19 +139,26 @@
 
 ### Lower Priority (Nice-to-Have)
 
-#### 8. Analytics (ONLY if requested by users)
+- [ ] **Calendar card in dashboard / home**
+  - Shows which days you worked out (with a checkmark) the last 7 days. Minimal UI that is mobile friendly.
+
+### Profile page
+
 - [ ] **Simple workout history list**
   - Scrollable list of past workouts
   - Tap to view details
   - No charts unless users ask
-- [ ] **Personal records (PRs)**
-  - Per exercise: highest weight for X reps
-  - Shown on exercise detail page
-  - No complex dashboard
+
+
+#### 8. Analytics (ONLY if requested by users)
 - [ ] **Basic stats** (if users want it)
   - Total workouts this week/month
   - Total volume this week/month
   - Simple numbers, no fancy charts
+- [ ] **Personal records (PRs)**
+  - Per exercise: highest weight for X reps
+  - Shown on exercise detail page
+  - No complex dashboard
 
 **Note:** We will NOT build complex analytics dashboards unless multiple users explicitly request them. UX beats features.
 - [ ] **Smart weight suggestions**
@@ -184,6 +188,10 @@
   - Toggle in settings
   - Respect system preference
   - Persistent choice
+- [ ] **Larger tap targets on mobile** (minimum 44px × 44px)
+  - Bigger buttons for sets, exercises, completion checkboxes
+  - Easy thumb-reach navigation
+  - No accidental taps
 
 ### Low Priority / Nice-to-Have
 
