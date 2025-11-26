@@ -39,8 +39,10 @@ export default function RecentWorkouts() {
   };
 
   const formatVolume = (volume?: number) => {
-    if (!volume) return 'N/A';
-    return `${volume.toFixed(0)} kg`;
+    if (!volume || volume === 0) return 'N/A';
+    const numVolume = typeof volume === 'string' ? parseFloat(volume) : volume;
+    if (isNaN(numVolume)) return 'N/A';
+    return `${numVolume.toFixed(0)} kg`;
   };
 
   if (loading) {

@@ -40,7 +40,10 @@ export default function WorkoutStats() {
   };
 
   const formatVolume = (kg: number) => {
-    return `${kg.toFixed(0)} kg`;
+    if (!kg || kg === 0) return '0 kg';
+    const numKg = typeof kg === 'string' ? parseFloat(kg) : kg;
+    if (isNaN(numKg)) return '0 kg';
+    return `${numKg.toFixed(0)} kg`;
   };
 
   const formatDuration = (seconds: number) => {
