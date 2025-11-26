@@ -3,9 +3,26 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Helper function to generate route name from coordinates
+function generateRouteName(coordinates, distance) {
+  if (!coordinates || coordinates.length === 0) {
+    const date = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const distanceKm = (distance / 1000).toFixed(1);
+    return `${distanceKm}km Route - ${date}`;
+  }
+
+  // Use first coordinate to generate location-based name
+  const [lng, lat] = coordinates[0];
+  const date = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const distanceKm = (distance / 1000).toFixed(1);
+
+  // For now, just use coordinates. In production, you'd use reverse geocoding
+  return `${distanceKm}km Route - ${date}`;
+}
+
 // Validation schemas
 const createRouteSchema = z.object({
-  name: z.string().min(1, 'Route name is required'),
+  name: z.string().optional(), // Make name optional so we can auto-generate it
   description: z.string().optional(),
   distance: z.number().positive('Distance must be positive'),
   elevationGain: z.number().optional(),
@@ -80,10 +97,13 @@ export async function createRoute(req, res, next) {
     const startPoint = coordinates[0];
     const endPoint = coordinates[coordinates.length - 1];
 
+    // Generate route name if not provided
+    const routeName = data.name || generateRouteName(coordinates, data.distance);
+
     const route = await prisma.route.create({
       data: {
         userId: req.user.id,
-        name: data.name,
+        name: routeName,
         description: data.description,
         distance: data.distance,
         elevationGain: data.elevationGain,

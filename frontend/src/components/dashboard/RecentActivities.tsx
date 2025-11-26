@@ -76,15 +76,10 @@ export default function RecentActivities() {
   if (activities.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Activities</h2>
-        <div className="text-center py-12">
-          <p className="text-gray-500 mb-4">No activities yet</p>
-          <Link
-            href="/activities/new"
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-red hover:bg-red-700"
-          >
-            Log your first run
-          </Link>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Runs</h2>
+        <div className="text-center py-8">
+          <p className="text-gray-500 mb-3 text-sm">No runs logged yet</p>
+          <p className="text-xs text-gray-400">Route tracking coming soon</p>
         </div>
       </div>
     );
@@ -93,7 +88,7 @@ export default function RecentActivities() {
   return (
     <div className="bg-white rounded-lg shadow">
       <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-        <h2 className="text-lg font-semibold text-gray-900">Recent Activities</h2>
+        <h2 className="text-lg font-semibold text-gray-900">Recent Runs</h2>
         <Link
           href="/activities"
           className="text-sm text-brand-red hover:text-red-700 font-medium"

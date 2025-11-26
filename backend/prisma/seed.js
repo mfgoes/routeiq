@@ -251,6 +251,168 @@ async function main() {
 
   console.log(`✅ Created demo user: ${demoUser.email}`);
 
+  // Create default workout templates
+  const templates = [
+    {
+      name: 'Upper Body Push (Machines)',
+      workoutType: 'strength',
+      isTemplate: true,
+      exercises: [
+        {
+          exerciseName: 'Bench Press',
+          sets: [
+            { set: 1, reps: 10, weight: 60, restSeconds: 90, rpe: 7 },
+            { set: 2, reps: 10, weight: 60, restSeconds: 90, rpe: 7 },
+            { set: 3, reps: 10, weight: 60, restSeconds: 90, rpe: 8 },
+          ],
+        },
+        {
+          exerciseName: 'Overhead Press',
+          sets: [
+            { set: 1, reps: 8, weight: 40, restSeconds: 90, rpe: 7 },
+            { set: 2, reps: 8, weight: 40, restSeconds: 90, rpe: 7 },
+            { set: 3, reps: 8, weight: 40, restSeconds: 90, rpe: 8 },
+          ],
+        },
+        {
+          exerciseName: 'Dips',
+          sets: [
+            { set: 1, reps: 10, weight: 0, restSeconds: 90, rpe: 7 },
+            { set: 2, reps: 10, weight: 0, restSeconds: 90, rpe: 7 },
+            { set: 3, reps: 10, weight: 0, restSeconds: 90, rpe: 8 },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'Upper Body Pull',
+      workoutType: 'strength',
+      isTemplate: true,
+      exercises: [
+        {
+          exerciseName: 'Pull-Ups',
+          sets: [
+            { set: 1, reps: 8, weight: 0, restSeconds: 90, rpe: 7 },
+            { set: 2, reps: 8, weight: 0, restSeconds: 90, rpe: 8 },
+            { set: 3, reps: 8, weight: 0, restSeconds: 90, rpe: 8 },
+          ],
+        },
+        {
+          exerciseName: 'Bent-Over Rows',
+          sets: [
+            { set: 1, reps: 10, weight: 50, restSeconds: 90, rpe: 7 },
+            { set: 2, reps: 10, weight: 50, restSeconds: 90, rpe: 7 },
+            { set: 3, reps: 10, weight: 50, restSeconds: 90, rpe: 8 },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'Lower Body Strength',
+      workoutType: 'strength',
+      isTemplate: true,
+      exercises: [
+        {
+          exerciseName: 'Back Squat',
+          sets: [
+            { set: 1, reps: 8, weight: 80, restSeconds: 120, rpe: 7 },
+            { set: 2, reps: 8, weight: 80, restSeconds: 120, rpe: 7 },
+            { set: 3, reps: 8, weight: 80, restSeconds: 120, rpe: 8 },
+          ],
+        },
+        {
+          exerciseName: 'Romanian Deadlift',
+          sets: [
+            { set: 1, reps: 10, weight: 60, restSeconds: 90, rpe: 7 },
+            { set: 2, reps: 10, weight: 60, restSeconds: 90, rpe: 7 },
+            { set: 3, reps: 10, weight: 60, restSeconds: 90, rpe: 8 },
+          ],
+        },
+        {
+          exerciseName: 'Bulgarian Split Squat',
+          sets: [
+            { set: 1, reps: 10, weight: 20, restSeconds: 90, rpe: 7 },
+            { set: 2, reps: 10, weight: 20, restSeconds: 90, rpe: 7 },
+            { set: 3, reps: 10, weight: 20, restSeconds: 90, rpe: 8 },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'Full Body Beginner',
+      workoutType: 'strength',
+      isTemplate: true,
+      exercises: [
+        {
+          exerciseName: 'Back Squat',
+          sets: [
+            { set: 1, reps: 10, weight: 60, restSeconds: 90, rpe: 6 },
+            { set: 2, reps: 10, weight: 60, restSeconds: 90, rpe: 7 },
+            { set: 3, reps: 10, weight: 60, restSeconds: 90, rpe: 7 },
+          ],
+        },
+        {
+          exerciseName: 'Bench Press',
+          sets: [
+            { set: 1, reps: 10, weight: 40, restSeconds: 90, rpe: 6 },
+            { set: 2, reps: 10, weight: 40, restSeconds: 90, rpe: 7 },
+            { set: 3, reps: 10, weight: 40, restSeconds: 90, rpe: 7 },
+          ],
+        },
+        {
+          exerciseName: 'Bent-Over Rows',
+          sets: [
+            { set: 1, reps: 10, weight: 40, restSeconds: 90, rpe: 6 },
+            { set: 2, reps: 10, weight: 40, restSeconds: 90, rpe: 7 },
+            { set: 3, reps: 10, weight: 40, restSeconds: 90, rpe: 7 },
+          ],
+        },
+        {
+          exerciseName: 'Plank',
+          sets: [
+            { set: 1, reps: 30, weight: 0, restSeconds: 60, rpe: 7 },
+            { set: 2, reps: 30, weight: 0, restSeconds: 60, rpe: 7 },
+            { set: 3, reps: 30, weight: 0, restSeconds: 60, rpe: 8 },
+          ],
+        },
+      ],
+    },
+  ];
+
+  // Create templates for demo user
+  let templatesCreated = 0;
+  for (const template of templates) {
+    // Find exercises
+    const exerciseRecords = await Promise.all(
+      template.exercises.map(async (ex) => {
+        const exercise = await prisma.exercise.findFirst({
+          where: { name: ex.exerciseName },
+        });
+        return { exercise, sets: ex.sets };
+      })
+    );
+
+    // Create workout template
+    await prisma.workout.create({
+      data: {
+        userId: demoUser.id,
+        name: template.name,
+        workoutType: template.workoutType,
+        isTemplate: true,
+        exercises: {
+          create: exerciseRecords.map((record, index) => ({
+            exerciseId: record.exercise.id,
+            exerciseOrder: index + 1,
+            sets: record.sets,
+          })),
+        },
+      },
+    });
+    templatesCreated++;
+  }
+
+  console.log(`✅ Created ${templatesCreated} default workout templates`);
+
   console.log('✅ Database seeded successfully!');
 }
 
