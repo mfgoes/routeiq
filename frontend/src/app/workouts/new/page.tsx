@@ -10,6 +10,8 @@ import SetRow from '@/components/workout/SetRow';
 import ExerciseProgress from '@/components/workout/ExerciseProgress';
 import WorkoutSummary from '@/components/workout/WorkoutSummary';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import ExerciseSubstitutionModal from '@/components/workout/ExerciseSubstitutionModal';
+import ExerciseSelectionModal from '@/components/workout/ExerciseSelectionModal';
 import { getWorkoutSettings } from '@/lib/workoutSettings';
 
 interface SelectedExercise {
@@ -18,6 +20,10 @@ interface SelectedExercise {
   sets: WorkoutSet[];
   notes: string;
   suggestedWeight?: number;
+  isSkipped?: boolean;
+  isSubstitution?: boolean;
+  progressiveOverload?: boolean;
+  progressiveOverloadIncrement?: number;
 }
 
 const STORAGE_KEY = 'routeiq_active_workout';
@@ -37,7 +43,6 @@ export default function NewWorkoutPage() {
   const [selectedExercises, setSelectedExercises] = useState<SelectedExercise[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
-  const [showExerciseLibrary, setShowExerciseLibrary] = useState(true);
   const [showSummary, setShowSummary] = useState(false);
   const [templates, setTemplates] = useState<any[]>([]);
   const [loadingTemplates, setLoadingTemplates] = useState(true);
@@ -54,6 +59,11 @@ export default function NewWorkoutPage() {
     message: '',
     onConfirm: () => {},
   });
+  const [substitutionModal, setSubstitutionModal] = useState<{
+    isOpen: boolean;
+    exerciseIndex: number | null;
+  }>({ isOpen: false, exerciseIndex: null });
+  const [quickAddModalOpen, setQuickAddModalOpen] = useState(false);
 
   useEffect(() => {
     fetchExercises();
@@ -101,7 +111,6 @@ export default function NewWorkoutPage() {
             message: 'You have an unfinished workout. Continue where you left off?',
             onConfirm: () => {
               setSelectedExercises(savedEx);
-              setShowExerciseLibrary(false);
               setConfirmModal({ ...confirmModal, isOpen: false });
             },
           });
@@ -136,7 +145,6 @@ export default function NewWorkoutPage() {
       }));
 
       setSelectedExercises(templateExercises);
-      setShowExerciseLibrary(false);
       setCurrentTemplateName(template.name);
     } catch (err) {
       console.error('Error loading template:', err);
@@ -160,7 +168,6 @@ export default function NewWorkoutPage() {
       }));
 
       setSelectedExercises(workoutExercises);
-      setShowExerciseLibrary(false);
       setCurrentTemplateName(workout.name);
     } catch (err) {
       console.error('Error loading workout:', err);
@@ -203,11 +210,6 @@ export default function NewWorkoutPage() {
       suggestedWeight,
     };
     setSelectedExercises([...selectedExercises, newExercise]);
-
-    // Collapse library after adding 3+ exercises
-    if (selectedExercises.length >= 2) {
-      setShowExerciseLibrary(false);
-    }
   };
 
   const removeExercise = (index: number) => {
@@ -256,10 +258,17 @@ export default function NewWorkoutPage() {
           rpe: 7
         };
 
+    // Apply progressive overload if enabled
+    const increment = exercise.progressiveOverloadIncrement || 2.5;
+    const baseWeight = lastSet.weight || 0;
+    const newWeight = exercise.progressiveOverload
+      ? baseWeight + increment
+      : baseWeight;
+
     const newSet: WorkoutSet = {
       set: exercise.sets.length + 1,
       reps: lastSet.reps,
-      weight: lastSet.weight,
+      weight: newWeight,
       restSeconds: lastSet.restSeconds,
       rpe: lastSet.rpe,
     };
@@ -279,6 +288,39 @@ export default function NewWorkoutPage() {
     updated[exerciseIndex].sets[setIndex] = {
       ...updated[exerciseIndex].sets[setIndex],
       [field]: value,
+    };
+    setSelectedExercises(updated);
+  };
+
+  const skipExercise = (exerciseIndex: number) => {
+    const updated = [...selectedExercises];
+    updated[exerciseIndex].isSkipped = !updated[exerciseIndex].isSkipped;
+    setSelectedExercises(updated);
+  };
+
+  const markAsSubstitution = (exerciseIndex: number) => {
+    const updated = [...selectedExercises];
+    updated[exerciseIndex].isSubstitution = !updated[exerciseIndex].isSubstitution;
+    setSelectedExercises(updated);
+  };
+
+  const toggleProgressiveOverload = (exerciseIndex: number) => {
+    const updated = [...selectedExercises];
+    updated[exerciseIndex].progressiveOverload = !updated[exerciseIndex].progressiveOverload;
+    // Set default increment if not already set
+    if (!updated[exerciseIndex].progressiveOverloadIncrement) {
+      updated[exerciseIndex].progressiveOverloadIncrement = 2.5;
+    }
+    setSelectedExercises(updated);
+  };
+
+  const swapExercise = (exerciseIndex: number, newExercise: Exercise) => {
+    const updated = [...selectedExercises];
+    const oldExercise = updated[exerciseIndex];
+    updated[exerciseIndex] = {
+      ...oldExercise,
+      exercise: newExercise,
+      isSubstitution: true, // Mark as substitution when swapping
     };
     setSelectedExercises(updated);
   };
@@ -397,13 +439,19 @@ export default function NewWorkoutPage() {
   );
 
   if (showSummary) {
+    const completedExercises = selectedExercises.filter(ex => !ex.isSkipped && ex.sets.length > 0).length;
+    const plannedExercises = selectedExercises.length;
+    const skippedExercises = selectedExercises.filter(ex => ex.isSkipped).length;
+
     return (
       <WorkoutSummary
-        totalExercises={selectedExercises.filter(ex => ex.sets.length > 0).length}
+        totalExercises={completedExercises}
         totalSets={totalSets}
         totalVolume={totalVolume}
         totalReps={totalReps}
         durationMinutes={0}
+        plannedExercises={plannedExercises}
+        skippedExercises={skippedExercises}
         onClose={() => router.push('/workouts')}
       />
     );
@@ -414,19 +462,36 @@ export default function NewWorkoutPage() {
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-2xl mx-auto p-4 pb-24">
           {/* Header */}
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900">
-              {isExecuteMode
-                ? (currentTemplateName ? `Do Workout: ${currentTemplateName}` : "Do Workout")
-                : "Create Workout Template"
-              }
-            </h1>
-            <p className="text-gray-600 mt-1">
-              {isExecuteMode
-                ? "Check off sets as you complete them"
-                : "Build a reusable workout plan"
-              }
-            </p>
+          <div className="mb-6 flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <h1 className="text-3xl font-bold text-gray-900">
+                {isExecuteMode
+                  ? (currentTemplateName ? `Do Workout: ${currentTemplateName}` : "Do Workout")
+                  : "Create Workout Template"
+                }
+              </h1>
+              <p className="text-gray-600 mt-1">
+                {isExecuteMode
+                  ? "Check off sets as you complete them"
+                  : "Build a reusable workout plan"
+                }
+              </p>
+            </div>
+
+            {/* Quick Add Exercise Button - Show when exercises exist */}
+            {selectedExercises.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setQuickAddModalOpen(true)}
+                className="min-w-[48px] h-[48px] px-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 active:bg-blue-800 transition-all active:scale-95 touch-manipulation flex items-center gap-2 shadow-lg"
+                aria-label="Add exercise"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                <span className="hidden sm:inline">Add Exercise</span>
+              </button>
+            )}
           </div>
 
           {error && (
@@ -485,8 +550,17 @@ export default function NewWorkoutPage() {
                 </div>
               )}
 
-              <div className="text-center py-3">
-                <p className="text-gray-500 text-sm font-medium">— or start from scratch below —</p>
+              <div className="pt-4 border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={() => setQuickAddModalOpen(true)}
+                  className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 active:bg-blue-800 transition-all active:scale-[0.98] touch-manipulation flex items-center justify-center gap-2 shadow-md"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Start From Scratch
+                </button>
               </div>
             </div>
           )}
@@ -509,22 +583,36 @@ export default function NewWorkoutPage() {
                         completedSets={completedSetsForExercise}
                         totalSets={selectedEx.sets.length}
                         isComplete={isExerciseComplete}
+                        isSkipped={selectedEx.isSkipped}
+                        isSubstitution={selectedEx.isSubstitution}
+                        progressiveOverload={selectedEx.progressiveOverload}
                         onRemove={() => removeExercise(exIndex)}
+                        onSkip={() => skipExercise(exIndex)}
+                        onSwap={() => setSubstitutionModal({ isOpen: true, exerciseIndex: exIndex })}
+                        onMarkSubstitution={() => markAsSubstitution(exIndex)}
+                        onToggleProgressiveOverload={() => toggleProgressiveOverload(exIndex)}
                       />
 
-                      <div className="p-4">
-                        {/* Suggested Weight Indicator */}
-                        {selectedEx.suggestedWeight && selectedEx.sets.length === 0 && (
-                          <div className="mb-4 p-3 bg-blue-50 border-2 border-blue-200 rounded-lg">
-                            <p className="text-sm font-medium text-blue-900">
-                              💡 Suggested weight: <span className="font-bold">{selectedEx.suggestedWeight} kg</span>
-                              <span className="text-blue-700 text-xs ml-2">(progressive overload applied)</span>
-                            </p>
-                          </div>
-                        )}
+                      {selectedEx.isSkipped ? (
+                        <div className="p-6 text-center">
+                          <p className="text-gray-500 italic">
+                            Exercise skipped. Click the menu to un-skip or swap this exercise.
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="p-4">
+                          {/* Suggested Weight Indicator */}
+                          {selectedEx.suggestedWeight && selectedEx.sets.length === 0 && (
+                            <div className="mb-4 p-3 bg-blue-50 border-2 border-blue-200 rounded-lg">
+                              <p className="text-sm font-medium text-blue-900">
+                                💡 Suggested weight: <span className="font-bold">{selectedEx.suggestedWeight} kg</span>
+                                <span className="text-blue-700 text-xs ml-2">(progressive overload applied)</span>
+                              </p>
+                            </div>
+                          )}
 
-                        {/* Quick Set Presets */}
-                        {selectedEx.sets.length === 0 && (
+                          {/* Quick Set Presets */}
+                          {selectedEx.sets.length === 0 && (
                           <div className="mb-4">
                             <p className="text-sm font-medium text-gray-700 mb-3">Quick start:</p>
                             <div className="grid grid-cols-2 gap-2">
@@ -596,85 +684,12 @@ export default function NewWorkoutPage() {
                           </div>
                         )}
                       </div>
+                      )}
                     </div>
                   );
                 })}
               </div>
             )}
-
-            {/* Exercise Library */}
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-              <button
-                type="button"
-                onClick={() => setShowExerciseLibrary(!showExerciseLibrary)}
-                className="w-full p-4 flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition-colors"
-              >
-                <h2 className="text-lg font-bold text-gray-900">
-                  {selectedExercises.length === 0 ? 'Select Exercises' : 'Add More Exercises'}
-                </h2>
-                <svg
-                  className={`w-6 h-6 transition-transform ${showExerciseLibrary ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-
-              {showExerciseLibrary && (
-                <div className="p-4">
-                  <div className="flex gap-2 mb-4">
-                    <input
-                      type="text"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      placeholder="Search exercises..."
-                      className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg bg-white text-gray-900 text-base"
-                    />
-                    <select
-                      value={categoryFilter}
-                      onChange={(e) => setCategoryFilter(e.target.value)}
-                      className="px-4 py-3 border-2 border-gray-300 rounded-lg bg-white text-gray-900 text-base"
-                    >
-                      <option value="all">All</option>
-                      {categories.map(cat => (
-                        <option key={cat} value={cat} className="capitalize">
-                          {cat.replace('_', ' ')}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {loadingExercises ? (
-                    <p className="text-gray-500 text-center py-8">Loading exercises...</p>
-                  ) : (
-                    <div className="space-y-2 max-h-96 overflow-y-auto">
-                      {filteredExercises.map(exercise => (
-                        <button
-                          key={exercise.id}
-                          type="button"
-                          onClick={() => addExercise(exercise)}
-                          className="w-full text-left p-4 border-2 border-gray-200 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-colors"
-                        >
-                          <div className="flex justify-between items-center">
-                            <div className="flex-1">
-                              <h4 className="font-bold text-gray-900">{exercise.name}</h4>
-                              <p className="text-sm text-gray-500 capitalize">
-                                {exercise.category.replace('_', ' ')}
-                              </p>
-                            </div>
-                            <div className="ml-3 px-4 py-2 bg-blue-600 text-white rounded-lg font-bold">
-                              ADD
-                            </div>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
 
             {/* Submit button - Fixed at bottom */}
             <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 p-4 shadow-lg">
@@ -731,6 +746,34 @@ export default function NewWorkoutPage() {
           }
           setConfirmModal({ ...confirmModal, isOpen: false });
         }}
+      />
+
+      <ExerciseSubstitutionModal
+        isOpen={substitutionModal.isOpen}
+        onClose={() => setSubstitutionModal({ isOpen: false, exerciseIndex: null })}
+        currentExercise={
+          substitutionModal.exerciseIndex !== null
+            ? selectedExercises[substitutionModal.exerciseIndex].exercise
+            : exercises[0] // Fallback
+        }
+        allExercises={exercises}
+        onSelect={(exercise) => {
+          if (substitutionModal.exerciseIndex !== null) {
+            swapExercise(substitutionModal.exerciseIndex, exercise);
+          }
+        }}
+      />
+
+      <ExerciseSelectionModal
+        isOpen={quickAddModalOpen}
+        onClose={() => setQuickAddModalOpen(false)}
+        allExercises={exercises}
+        selectedExerciseIds={selectedExercises.map(ex => ex.exercise.id)}
+        onSelect={(exercise) => {
+          addExercise(exercise);
+          setQuickAddModalOpen(false);
+        }}
+        loading={loadingExercises}
       />
     </DashboardLayout>
   );

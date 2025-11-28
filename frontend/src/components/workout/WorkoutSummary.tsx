@@ -7,6 +7,8 @@ interface WorkoutSummaryProps {
   totalVolume: number;
   totalReps: number;
   durationMinutes: number;
+  plannedExercises?: number; // Total exercises planned (including skipped)
+  skippedExercises?: number; // Number of skipped exercises
   onClose: () => void;
 }
 
@@ -16,10 +18,18 @@ export default function WorkoutSummary({
   totalVolume,
   totalReps,
   durationMinutes,
+  plannedExercises,
+  skippedExercises = 0,
   onClose,
 }: WorkoutSummaryProps) {
   const router = useRouter();
   const [showConfetti, setShowConfetti] = useState(true);
+
+  // Calculate adherence
+  const actualPlanned = plannedExercises || totalExercises;
+  const completedExercises = totalExercises;
+  const adherencePercent = actualPlanned > 0 ? Math.round((completedExercises / actualPlanned) * 100) : 100;
+  const hasSkippedExercises = skippedExercises > 0;
 
   useEffect(() => {
     // Hide confetti after animation
@@ -60,12 +70,50 @@ export default function WorkoutSummary({
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative animate-scale-in">
         {/* Celebration header */}
         <div className="text-center mb-6">
-          <div className="text-6xl mb-4 animate-bounce-once">🎉</div>
+          <div className="text-6xl mb-4 animate-bounce-once">
+            {adherencePercent >= 90 ? '🔥' : adherencePercent >= 75 ? '🎉' : adherencePercent >= 50 ? '💪' : '✅'}
+          </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
             Workout Complete!
           </h2>
-          <p className="text-gray-600">Great job crushing it today</p>
+          <p className="text-gray-600">
+            {adherencePercent >= 90
+              ? 'Perfect execution! You crushed it!'
+              : adherencePercent >= 75
+              ? 'Great job crushing it today'
+              : adherencePercent >= 50
+              ? 'Solid effort! Every workout counts'
+              : 'You showed up! That\'s what matters'}
+          </p>
         </div>
+
+        {/* Adherence section */}
+        {plannedExercises && plannedExercises > 0 && (
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-semibold text-gray-700">Workout Adherence</span>
+              <span className={`text-lg font-bold ${adherencePercent >= 75 ? 'text-green-600' : adherencePercent >= 50 ? 'text-orange-600' : 'text-red-600'}`}>
+                {adherencePercent}%
+              </span>
+            </div>
+            <div className="bg-gray-200 rounded-full h-4 overflow-hidden shadow-inner">
+              <div
+                className={`h-full transition-all duration-1000 ease-out ${
+                  adherencePercent >= 75 ? 'bg-gradient-to-r from-green-500 to-green-600' : adherencePercent >= 50 ? 'bg-gradient-to-r from-orange-500 to-orange-600' : 'bg-gradient-to-r from-red-500 to-red-600'
+                }`}
+                style={{ width: `${adherencePercent}%` }}
+              />
+            </div>
+            <div className="mt-2 text-sm text-gray-600 text-center">
+              {completedExercises} of {actualPlanned} exercises completed
+              {hasSkippedExercises && (
+                <span className="ml-1 text-gray-500">
+                  ({skippedExercises} skipped)
+                </span>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Stats grid */}
         <div className="grid grid-cols-2 gap-4 mb-6">

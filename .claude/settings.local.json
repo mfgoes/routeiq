@@ -41,7 +41,8 @@
       "Bash(find:*)",
       "Bash(git -C /Users/mischa.van.der.goes/Documents/GitHub/routeiq log --oneline -10)",
       "Bash(git push:*)",
-      "Bash(jq:*)"
+      "Bash(jq:*)",
+      "Bash(kill:*)"
     ],
     "deny": [],
     "ask": []
