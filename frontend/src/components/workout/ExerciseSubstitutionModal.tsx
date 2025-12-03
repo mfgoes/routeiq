@@ -1,13 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-
-interface Exercise {
-  id: string;
-  name: string;
-  category: string;
-  description?: string;
-}
+import { Exercise } from '@/types/workout';
 
 interface ExerciseSubstitutionModalProps {
   isOpen: boolean;

@@ -9,10 +9,12 @@ import type { Exercise, WorkoutSet, WorkoutExerciseInput } from '@/types/workout
 import SetRow from '@/components/workout/SetRow';
 import ExerciseProgress from '@/components/workout/ExerciseProgress';
 import WorkoutSummary from '@/components/workout/WorkoutSummary';
+import WorkoutHeader from '@/components/workout/WorkoutHeader';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import ExerciseSubstitutionModal from '@/components/workout/ExerciseSubstitutionModal';
 import ExerciseSelectionModal from '@/components/workout/ExerciseSelectionModal';
 import { getWorkoutSettings } from '@/lib/workoutSettings';
+import { getExerciseIcon } from '@/lib/exerciseIcons';
 
 interface SelectedExercise {
   exercise: Exercise;
@@ -65,6 +67,17 @@ export default function NewWorkoutPage() {
   }>({ isOpen: false, exerciseIndex: null });
   const [quickAddModalOpen, setQuickAddModalOpen] = useState(false);
 
+  // New state for UX improvements
+  const [collapsedExercises, setCollapsedExercises] = useState<Set<number>>(new Set());
+  const [restTimerEnabled, setRestTimerEnabled] = useState(true);
+  const [activeRestTimer, setActiveRestTimer] = useState<{
+    exerciseIndex: number;
+    setIndex: number;
+    remainingSeconds: number;
+    totalSeconds: number;
+  } | null>(null);
+  const [workoutStartTime] = useState<Date>(new Date());
+
   useEffect(() => {
     fetchExercises();
     fetchTemplates();
@@ -98,6 +111,48 @@ export default function NewWorkoutPage() {
       localStorage.removeItem(STORAGE_KEY);
     }
   }, [selectedExercises]);
+
+  // Load rest timer preference from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('routeiq_rest_timer_enabled');
+    if (saved !== null) {
+      setRestTimerEnabled(JSON.parse(saved));
+    }
+  }, []);
+
+  // Save rest timer preference to localStorage
+  useEffect(() => {
+    localStorage.setItem('routeiq_rest_timer_enabled', JSON.stringify(restTimerEnabled));
+  }, [restTimerEnabled]);
+
+  // Auto-collapse completed exercises
+  useEffect(() => {
+    selectedExercises.forEach((ex, idx) => {
+      const completed = ex.sets.length > 0 && ex.sets.every(s => s.completed);
+      if (completed && !collapsedExercises.has(idx)) {
+        setCollapsedExercises(prev => new Set(prev).add(idx));
+      }
+    });
+  }, [selectedExercises, collapsedExercises]);
+
+  // Rest timer countdown
+  useEffect(() => {
+    if (!activeRestTimer) return;
+
+    const interval = setInterval(() => {
+      setActiveRestTimer(prev => {
+        if (!prev || prev.remainingSeconds <= 0) {
+          return null; // Timer complete
+        }
+        return {
+          ...prev,
+          remainingSeconds: prev.remainingSeconds - 1,
+        };
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [activeRestTimer]);
 
   const loadWorkoutFromStorage = () => {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -289,7 +344,31 @@ export default function NewWorkoutPage() {
       ...updated[exerciseIndex].sets[setIndex],
       [field]: value,
     };
+
+    // Start rest timer when set is marked complete
+    if (field === 'completed' && value === true && restTimerEnabled) {
+      const restSeconds = updated[exerciseIndex].sets[setIndex].restSeconds || 90;
+      setActiveRestTimer({
+        exerciseIndex,
+        setIndex,
+        remainingSeconds: restSeconds,
+        totalSeconds: restSeconds,
+      });
+    }
+
     setSelectedExercises(updated);
+  };
+
+  const toggleCollapseExercise = (index: number) => {
+    setCollapsedExercises(prev => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
   };
 
   const skipExercise = (exerciseIndex: number) => {
@@ -438,6 +517,12 @@ export default function NewWorkoutPage() {
     sum + ex.sets.reduce((s, set) => s + (set.reps || 0), 0), 0
   );
 
+  // Calculate current exercise (first incomplete)
+  const currentExerciseIndex = selectedExercises.findIndex(ex =>
+    !ex.isSkipped && ex.sets.some(s => !s.completed)
+  );
+  const currentExercise = currentExerciseIndex >= 0 ? selectedExercises[currentExerciseIndex] : null;
+
   if (showSummary) {
     const completedExercises = selectedExercises.filter(ex => !ex.isSkipped && ex.sets.length > 0).length;
     const plannedExercises = selectedExercises.length;
@@ -493,6 +578,46 @@ export default function NewWorkoutPage() {
               </button>
             )}
           </div>
+
+          {/* Rest Timer Toggle - Show when exercises exist */}
+          {selectedExercises.length > 0 && (
+            <div className="mb-4 flex items-center justify-end">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <span className="text-sm font-medium text-gray-700">Rest Timer</span>
+                <button
+                  type="button"
+                  onClick={() => setRestTimerEnabled(!restTimerEnabled)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    restTimerEnabled ? 'bg-blue-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      restTimerEnabled ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </label>
+            </div>
+          )}
+
+          {/* Sticky Workout Header - Show when exercises exist and in execute mode */}
+          {selectedExercises.length > 0 && isExecuteMode && (
+            <WorkoutHeader
+              startTime={workoutStartTime}
+              totalExercises={selectedExercises.filter(ex => !ex.isSkipped).length}
+              completedExercises={completedExercises}
+              totalSets={totalSets}
+              completedSets={completedSets}
+              currentExerciseName={currentExercise?.exercise.name}
+              currentExerciseIcon={currentExercise ? getExerciseIcon(currentExercise.exercise) : undefined}
+              restTimer={activeRestTimer ? {
+                remainingSeconds: activeRestTimer.remainingSeconds,
+                totalSeconds: activeRestTimer.totalSeconds,
+              } : null}
+              onSkipRest={() => setActiveRestTimer(null)}
+            />
+          )}
 
           {error && (
             <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 font-medium">
@@ -586,6 +711,11 @@ export default function NewWorkoutPage() {
                         isSkipped={selectedEx.isSkipped}
                         isSubstitution={selectedEx.isSubstitution}
                         progressiveOverload={selectedEx.progressiveOverload}
+                        iconUrl={getExerciseIcon(selectedEx.exercise)}
+                        muscleGroups={selectedEx.exercise.muscleGroups}
+                        equipment={selectedEx.exercise.equipment}
+                        isCollapsed={collapsedExercises.has(exIndex)}
+                        onToggleCollapse={() => toggleCollapseExercise(exIndex)}
                         onRemove={() => removeExercise(exIndex)}
                         onSkip={() => skipExercise(exIndex)}
                         onSwap={() => setSubstitutionModal({ isOpen: true, exerciseIndex: exIndex })}
@@ -593,7 +723,7 @@ export default function NewWorkoutPage() {
                         onToggleProgressiveOverload={() => toggleProgressiveOverload(exIndex)}
                       />
 
-                      {selectedEx.isSkipped ? (
+                      {!collapsedExercises.has(exIndex) && (selectedEx.isSkipped ? (
                         <div className="p-6 text-center">
                           <p className="text-gray-500 italic">
                             Exercise skipped. Click the menu to un-skip or swap this exercise.
@@ -684,7 +814,7 @@ export default function NewWorkoutPage() {
                           </div>
                         )}
                       </div>
-                      )}
+                      ))}
                     </div>
                   );
                 })}

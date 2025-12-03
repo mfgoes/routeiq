@@ -14,6 +14,11 @@ interface ExerciseProgressProps {
   isSkipped?: boolean;
   isSubstitution?: boolean;
   progressiveOverload?: boolean;
+  iconUrl?: string;
+  muscleGroups?: string[];
+  equipment?: string[];
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 export default function ExerciseProgress({
@@ -30,6 +35,11 @@ export default function ExerciseProgress({
   isSkipped = false,
   isSubstitution = false,
   progressiveOverload = false,
+  iconUrl,
+  muscleGroups,
+  equipment,
+  isCollapsed = false,
+  onToggleCollapse,
 }: ExerciseProgressProps) {
   const progressPercent = totalSets > 0 ? (completedSets / totalSets) * 100 : 0;
   const [showMenu, setShowMenu] = useState(false);
@@ -55,32 +65,74 @@ export default function ExerciseProgress({
         : 'bg-white border-2 border-gray-200'
     }`}>
       <div className="flex justify-between items-start mb-3">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h3 className={`text-xl sm:text-2xl font-bold ${isSkipped ? 'text-gray-500 line-through' : 'text-gray-900'}`}>
-              {exerciseName}
-            </h3>
-            {isComplete && !isSkipped && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-green-500 rounded-full shadow-sm">
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+        <button
+          type="button"
+          onClick={onToggleCollapse}
+          className="flex-1 flex items-start gap-3 text-left cursor-pointer hover:opacity-80 transition-opacity"
+          disabled={!onToggleCollapse}
+        >
+          {/* Exercise Icon */}
+          {iconUrl && (
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gray-100 p-2">
+              <img src={iconUrl} alt="" className="w-full h-full object-contain" />
+            </div>
+          )}
+
+          <div className="flex-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className={`text-xl sm:text-2xl font-bold ${isSkipped ? 'text-gray-500 line-through' : 'text-gray-900'}`}>
+                {exerciseName}
+              </h3>
+              {isComplete && !isSkipped && (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-green-500 rounded-full shadow-sm">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-white text-sm font-bold">DONE</span>
+                </div>
+              )}
+              {isSkipped && (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-500 rounded-full shadow-sm">
+                  <span className="text-white text-sm font-bold">SKIPPED</span>
+                </div>
+              )}
+              {isSubstitution && !isSkipped && (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-500 rounded-full shadow-sm">
+                  <span className="text-white text-sm font-bold">SUBSTITUTION</span>
+                </div>
+              )}
+
+              {/* Collapse/Expand indicator */}
+              {onToggleCollapse && (
+                <svg
+                  className={`w-5 h-5 text-gray-400 transition-transform ${isCollapsed ? '' : 'rotate-180'}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
-                <span className="text-white text-sm font-bold">DONE</span>
-              </div>
-            )}
-            {isSkipped && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-500 rounded-full shadow-sm">
-                <span className="text-white text-sm font-bold">SKIPPED</span>
-              </div>
-            )}
-            {isSubstitution && !isSkipped && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-500 rounded-full shadow-sm">
-                <span className="text-white text-sm font-bold">SUBSTITUTION</span>
-              </div>
-            )}
+              )}
+            </div>
+
+            {/* Muscle Groups & Equipment */}
+            <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
+              <span className="capitalize">{category.replace(/_/g, ' ')}</span>
+              {muscleGroups && muscleGroups.length > 0 && (
+                <>
+                  <span>•</span>
+                  <span className="capitalize">{muscleGroups.join(', ')}</span>
+                </>
+              )}
+              {equipment && equipment.length > 0 && (
+                <>
+                  <span>•</span>
+                  <span className="capitalize">{equipment.join(', ')}</span>
+                </>
+              )}
+            </div>
           </div>
-          <p className="text-sm text-gray-500 capitalize mt-1">{category.replace('_', ' ')}</p>
-        </div>
+        </button>
 
         {/* Exercise menu */}
         <div className="flex items-center gap-2" ref={menuRef}>

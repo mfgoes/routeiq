@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import RestTimerDisplay from './RestTimerDisplay';
 
 interface WorkoutHeaderProps {
   startTime: Date;
@@ -6,6 +7,13 @@ interface WorkoutHeaderProps {
   completedExercises: number;
   totalSets: number;
   completedSets: number;
+  currentExerciseName?: string;
+  currentExerciseIcon?: string;
+  restTimer?: {
+    remainingSeconds: number;
+    totalSeconds: number;
+  } | null;
+  onSkipRest?: () => void;
 }
 
 export default function WorkoutHeader({
@@ -14,6 +22,10 @@ export default function WorkoutHeader({
   completedExercises,
   totalSets,
   completedSets,
+  currentExerciseName,
+  currentExerciseIcon,
+  restTimer,
+  onSkipRest,
 }: WorkoutHeaderProps) {
   const [elapsedMinutes, setElapsedMinutes] = useState(0);
 
@@ -37,35 +49,47 @@ export default function WorkoutHeader({
   const progressPercent = totalSets > 0 ? (completedSets / totalSets) * 100 : 0;
 
   return (
-    <div className="sticky top-0 z-10 bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg">
-      <div className="px-4 py-4">
-        {/* Timer and stats */}
-        <div className="flex justify-between items-center mb-3">
-          <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="text-lg font-bold">{formatDuration(elapsedMinutes)}</span>
-          </div>
-          <div className="text-right">
-            <div className="text-sm opacity-90">Progress</div>
-            <div className="text-lg font-bold">
-              {completedExercises}/{totalExercises} exercises
-            </div>
+    <div className="sticky top-0 z-10 bg-gradient-to-b from-gray-50 to-white border-b-2 border-gray-200 shadow-sm">
+      <div className="px-4 py-3">
+        {/* Top row: Timer and progress */}
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl font-bold text-gray-900">{formatDuration(elapsedMinutes)}</span>
+            <span className="text-sm text-gray-600">
+              {completedExercises}/{totalExercises} exercises • {completedSets}/{totalSets} sets
+            </span>
           </div>
         </div>
 
-        {/* Progress bar */}
-        <div className="bg-white bg-opacity-20 rounded-full h-2 overflow-hidden">
+        {/* Rest Timer Row (conditional) */}
+        {restTimer && onSkipRest && (
+          <div className="mb-2">
+            <RestTimerDisplay
+              remainingSeconds={restTimer.remainingSeconds}
+              totalSeconds={restTimer.totalSeconds}
+              onSkip={onSkipRest}
+            />
+          </div>
+        )}
+
+        {/* Current Exercise Row */}
+        {currentExerciseName && (
+          <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 rounded-lg border border-blue-200 mb-2">
+            {currentExerciseIcon && (
+              <img src={currentExerciseIcon} alt="" className="w-6 h-6 object-contain" />
+            )}
+            <span className="text-sm font-semibold text-blue-900">
+              Current: {currentExerciseName}
+            </span>
+          </div>
+        )}
+
+        {/* Progress Bar */}
+        <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
           <div
-            className="bg-white h-full transition-all duration-500 ease-out"
+            className="bg-gradient-to-r from-blue-500 to-blue-600 h-full transition-all duration-500 ease-out"
             style={{ width: `${progressPercent}%` }}
           />
-        </div>
-
-        {/* Set counter */}
-        <div className="mt-2 text-center text-sm opacity-90">
-          {completedSets} / {totalSets} sets completed
         </div>
       </div>
     </div>
